@@ -87,24 +87,10 @@ public class InOutRoomServlet extends HttpServlet {
                 if (new UsingRoom().getById(booking.getRoomNumber()) == null) {
                     request.setAttribute("booking", booking);
                     request.setAttribute("countries", ApiCountry.countries);
-                    request.setAttribute("roomnum", id);
                     request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
                 } else {
-                    response.setContentType("text/html;charset=UTF-8");
-                    try (PrintWriter out = response.getWriter()) {
-                        /* TODO output your page here. You may use following sample code. */
-                        out.println("<!DOCTYPE html>");
-                        out.println("<html>");
-                        out.println("<head>");
-                        out.println("<title>Servlet UpdateRoomServlet</title>");
-                        out.println("</head>");
-                        out.println("<body>");
-                        out.println("<h1> " + "Room is using" + "</h1>");
-                        out.println("</body>");
-                        out.println("</html>");
-                    }
+                    response.sendRedirect("index.html");
                 }
-
             }
             case "edit" -> {
                 Room room = new Room().getById(id);
@@ -125,7 +111,7 @@ public class InOutRoomServlet extends HttpServlet {
                 response.sendRedirect("listroom");
             }
             default ->
-                throw new AssertionError();
+                response.sendRedirect("index.html");
         }
     }
 
@@ -147,7 +133,7 @@ public class InOutRoomServlet extends HttpServlet {
         }
         String id = request.getParameter("roomnum");
         switch (action) {
-            case "checkin": {
+            case "checkin" -> {
                 // get information of User
                 int numberUser = Integer.parseInt(request.getParameter("numberuser"));
 
@@ -189,10 +175,9 @@ public class InOutRoomServlet extends HttpServlet {
                 users.insert(users);
 
                 response.sendRedirect("listroom");
-                break;
             }
 
-            case "edit": {
+            case "edit" -> {
                 //get information usingroom was changed
                 Date dateout = Utils.convertStringToDate(request.getParameter("dateout"));
                 float deposite = Utils.parseFloatParameter(request.getParameter("deposite"));
@@ -207,10 +192,10 @@ public class InOutRoomServlet extends HttpServlet {
                 usingRoom.update(usingRoom);
 
                 response.sendRedirect("listroom");
-                break;
             }
-            default:
-                throw new AssertionError();
+            default -> {
+                response.sendRedirect("index.html");
+            }
         }
     }
 

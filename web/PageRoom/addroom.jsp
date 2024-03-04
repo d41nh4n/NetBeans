@@ -17,7 +17,6 @@
                 margin-bottom: 20px;
             }
         </style>
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     </head>
     <body>
         <h2>Add Booking</h2>
@@ -64,7 +63,7 @@
             <c:choose>
                 <c:when test="${ not empty booking}">
                     <input type="hidden" name="roomnum" value="${booking.roomNumber}">
-                    <input type="hidden" name="idbooking" value="${booking.idbooking}">
+                    <input type="hidden" name="idbooking" value="${booking.id}">
                 </c:when>
                 <c:otherwise>
                     <input type="hidden" name="roomnum" value="${roomnum}">
