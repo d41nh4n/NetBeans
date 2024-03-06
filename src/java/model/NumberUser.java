@@ -42,6 +42,11 @@ public class NumberUser {
         customers.add(customer);
     }
 
+    @Override
+    public String toString() {
+        return "NumberUser{" + "customers=" + customers + ", usingRoom=" + usingRoom + '}';
+    }
+
     public int insert(NumberUser numberUser) {
         return new NumberUserDao().insert(numberUser);
     }
@@ -53,8 +58,11 @@ public class NumberUser {
     public NumberUser getByRoom(Room room) {
         return new NumberUserDao().getByRoomNumber(room.getRoomNum());
     }
-    
-    public int delete(NumberUser numberUser){
-        return new NumberUserDao().delete(numberUser.getUsingRoom().getRoomNum());
+
+    public int delete(NumberUser numberUser) {
+        if (numberUser.getUsingRoom() != null) {
+            return new NumberUserDao().delete(numberUser.getUsingRoom().getRoomNum());
+        }
+        return 0;
     }
 }

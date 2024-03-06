@@ -69,7 +69,10 @@ public abstract class Person implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Person{" + "fullName=" + fullName + ", dob=" + dob + ", sex=" + sex + ", phone=" + phone + ", id=" + id + '}';
+    }
     
 }

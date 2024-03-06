@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import model.Customer;
 
@@ -61,8 +62,11 @@ public class AddCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        request.setAttribute("countries",ApiCountry.countries);
+
+        HttpSession session = request.getSession();
+        if (session.getAttribute("countries") == null) {
+            session.setAttribute("countries", ApiCountry.countries);
+        }
         request.getRequestDispatcher("PageCustomer/addcustomer.jsp").forward(request, response);
     }
 

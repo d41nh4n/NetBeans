@@ -43,7 +43,7 @@
 
                     <label for="searchcountry">Search Country:</label><br>
                     <select name="nationality" required><br>
-                        <c:forEach items="${countries}" var="country">
+                        <c:forEach items="${sessionScope.countries}" var="country">
                             <option value="${country}" >${country}</option>
                         </c:forEach>     
                     </select> <br>

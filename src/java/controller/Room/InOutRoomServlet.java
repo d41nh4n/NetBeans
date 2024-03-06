@@ -67,27 +67,38 @@ public class InOutRoomServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String action = request.getParameter("action");
         if (action == null) {
             response.sendRedirect("index.html");
             return;
         }
+        if (session.getAttribute("countries") == null) {
+            session.setAttribute("countries", ApiCountry.countries);
+        }
         String roomNum = request.getParameter("roomnum");
         switch (action) {
             case "checkin" -> {
                 if (new UsingRoom().getById(roomNum) == null) {
-                    request.setAttribute("countries", ApiCountry.countries);
-                    request.setAttribute("roomnum", roomNum);
+                    //check sesion user null
+                    if (session.getAttribute("users") != null) {
+                        session.removeAttribute("users");
+                    }
+                    if (session.getAttribute("roomnum") != null) {
+                        session.removeAttribute("roomnum ");
+                    }
+                    session.setAttribute("roomnum", roomNum);
                     request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
                 }
             }
             case "booking" -> {
                 String idBooking = request.getParameter("ID");
                 Booking booking = new Booking().getById(idBooking);
-                HttpSession session = request.getSession();
                 if (new UsingRoom().getById(booking.getRoomNumber()) == null) {
+                    if (session.getAttribute("booking") != null) {
+                        session.removeAttribute("booking ");
+                    }
                     session.setAttribute("booking", booking);
-                    request.setAttribute("countries", ApiCountry.countries);
                     request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
                 }
             }

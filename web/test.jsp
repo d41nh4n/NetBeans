@@ -6,7 +6,7 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set value="${sessionScope.booking}" var="booking"/>
+<c:set value="${sessionScope.users}" var="booking"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,6 +17,8 @@
 
     </head>
     <body>
-        ${booking}
+        <c:forEach items="${booking}" var="u">
+            ${u}
+        </c:forEach>
     </body>
 </html>

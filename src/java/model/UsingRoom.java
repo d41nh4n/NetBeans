@@ -3,15 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+
 import dal.UsingRoomDao;
 import java.sql.Date;
 import java.util.List;
+
 /**
  *
  * @author Dai Nhan
  */
 public class UsingRoom {
-   
+
     private String roomNum;
     private int numberUser;
     private Date datein;
@@ -78,11 +80,16 @@ public class UsingRoom {
     public void setPriceTotal(float priceTotal) {
         this.priceTotal = priceTotal;
     }
-     
-      public List<UsingRoom> getAll() {
+
+    @Override
+    public String toString() {
+        return "UsingRoom{" + "roomNum=" + roomNum + ", numberUser=" + numberUser + ", datein=" + datein + ", dateout=" + dateout + ", deposite=" + deposite + ", priceTotal=" + priceTotal + '}';
+    }
+
+    public List<UsingRoom> getAll() {
         return new UsingRoomDao().getAll();
     }
-    
+
     public UsingRoom getById(String id) {
         return new UsingRoomDao().getById(id);
     }

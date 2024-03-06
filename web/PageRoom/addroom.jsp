@@ -57,43 +57,41 @@
     </head>
     <body>
         <h2>Add Booking</h2>
+        <!-- Button trigger modal -->
+        <button type="button" class=" bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"  onclick="openModal()">
+            Add New Customer
+        </button><br>
+        <!-- Session User -->
+        <c:forEach var="user" items="${sessionScope.users}" varStatus="loop">
+            <h3>Customer ${loop.index + 1}</h3>
+            <div class="flex space-x-4">
+                <p>ID: ${user.id}</p>
+                <p>Full Name: ${user.fullName}</p>
+                <p>Date of Birth: <fmt:formatDate pattern="MM-dd-yyyy" value="${user.dob}" /></p>
+                <p>Gender: ${functions:convertGender(user.sex)}</p>
+                <p>Phone: ${user.phone}</p>
+                <p>Nationality: ${user.nationality}</p>
+            </div>
+        </c:forEach>
         <form action="checkin" method="post">
             <input type="hidden" name="id" value="${booking.id}">
             <label for="datein">Date In:</label>
-            <input type="date" id="datein" name="datein" required value="${booking.dateIn}"><br>
+            <input type="date" id="datein" name="datein" required value="${sessionScope.datein}"><br>
             <label for="dateout">Date Out:</label>
-            <input type="date" id="dateout" name="dateout" required value="${booking.dateOut}"><br>
+            <input type="date" id="dateout" name="dateout" required value="${sessionScope.dateout}"><br>
             <label for="deposit">Deposit:</label>
-            <select id="deposit" name="deposite">
+            <select id="deposit" name="deposit">
                 <option value="0">None</option>
-                <option value="5000000" <c:if test="${booking.deposite == '5000000'}">selected</c:if>>5 million</option>
-                <option value="10000000"  <c:if test="${booking.deposite == '10000000'}">selected</c:if>>10 million</option>
-                <option value="15000000"  <c:if test="${booking.deposite == '15000000'}">selected</c:if>>15 million</option>
+                <option value="5000000" <c:if test="${sessionScope.deposit == '5000000'}">selected</c:if>>5 million</option>
+                <option value="10000000"  <c:if test="${sessionScope.deposit == '10000000'}">selected</c:if>>10 million</option>
+                <option value="15000000"  <c:if test="${sessionScope.deposit == '15000000'}">selected</c:if>>15 million</option>
                 </select><br>
-
-                <!-- Session User -->
-            <c:forEach var="user" items="${sessionScope.users}" varStatus="loop">
-                <h3>Customer ${loop.index + 1}</h3>
-                <div class="flex space-x-4">
-                    <p>ID: ${user.id}</p>
-                    <p>Full Name: ${user.fullName}</p>
-                    <p>Date of Birth: <fmt:formatDate pattern="MM-dd-yyyy" value="${user.dob}" /></p>
-                    <p>Gender: ${functions:convertGender(user.sex)}</p>
-                    <p>Phone: ${user.phone}</p>
-                    <p>Nationality: ${user.nationality}</p>
-                </div>
-            </c:forEach>
-
-            <!-- Button trigger modal -->
-            <button type="button" class=" bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"  onclick="openModal()">
-                Add New Customer
-            </button><br>
             <c:choose>
                 <c:when test="${ not empty booking}">
                     <input type="hidden" name="roomnum" value="${booking.roomNumber}">
                 </c:when>
                 <c:otherwise>
-                    <input type="hidden" name="roomnum" value="${roomnum}">
+                    <input type="hidden" name="roomnum" value="${sessionScope.roomnum}">
                 </c:otherwise>
             </c:choose>
             <input type="submit" value="Submit">
@@ -124,7 +122,7 @@
                 <button class="text-gray-500 hover:text-gray-700" onclick="closeModal2()">&times;</button>
             </div>
             <label class="mt-4 block">Add new customer</label>
-            <form action="addcustomer" method="post">
+            <form action="addcus" method="post">
                 <label for="firstname">First Name: </label><br>
                 <input type="text" id="firstname" name="firstname" required><br>
 
@@ -148,7 +146,7 @@
 
                 <label for="searchcountry">Search Country:</label><br>
                 <select name="nationality" required><br>
-                    <c:forEach items="${countries}" var="country">
+                    <c:forEach items="${sessionScope.countries}" var="country">
                         <option value="${country}" >${country}</option>
                     </c:forEach>     
                 </select><br>

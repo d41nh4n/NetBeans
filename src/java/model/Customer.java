@@ -34,7 +34,7 @@ public class Customer extends Person implements Serializable {
     public void setNationality(String nationality) {
         this.nationality = nationality;
     }
-
+    
     public List<Customer> getAll() {
         return new CustomerDao().getAll();
     }
@@ -54,7 +54,8 @@ public class Customer extends Person implements Serializable {
     public int update(Customer o) {
         return new CustomerDao().update(o);
     }
-
+    
+    
     public List<Customer> getListById(String id) {
         return new CustomerDao().searchListById(id);
     }

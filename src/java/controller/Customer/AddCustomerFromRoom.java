@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.Room;
+package controller.Customer;
 
 import API.ApiCountry;
 import Utils.Utils;
@@ -17,17 +17,14 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import model.Booking;
 import model.Customer;
-import model.NumberUser;
-import model.UsingRoom;
 
 /**
  *
  * @author Dai Nhan
  */
-@WebServlet(name = "CheckInServlet", urlPatterns = {"/checkin"})
-public class CheckInServelet extends HttpServlet {
+@WebServlet(name = "AddCustomerFromRoom", urlPatterns = {"/addcus"})
+public class AddCustomerFromRoom extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +43,10 @@ public class CheckInServelet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet CheckInServelet</title>");
+            out.println("<title>Servlet AddCustomerFromRoom</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet CheckInServelet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddCustomerFromRoom at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,21 +64,7 @@ public class CheckInServelet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("selectedCustomer");
-        List<Customer> users;
-        HttpSession session = request.getSession();
-        if (session.getAttribute("users") == null) {
-            users = new ArrayList<>();
-        } else {
-            users = (List<Customer>) session.getAttribute("users");
-        }
-        Customer selectedCustomer = new Customer().getById(id);
 
-        if (selectedCustomer != null) {
-            users.add(selectedCustomer);
-        }
-        session.setAttribute("users", users);
-        request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
     }
 
     /**
@@ -95,31 +78,32 @@ public class CheckInServelet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String id = request.getParameter("roomnum");
-        // get information of User
-        ArrayList<Customer> customers = (ArrayList<Customer>) session.getAttribute("users");
+        String fullName = request.getParameter("firstname") + " " + request.getParameter("lastname");
+        String dob = request.getParameter("dob");
+        boolean sex = Utils.parseBooleanParameter(request.getParameter("sex"));
+        String phone = request.getParameter("phone");
+        String id = request.getParameter("id");
+        String nationality = request.getParameter("nationality");
 
-        // get information of check-in bill
-        Date datein = Utils.convertStringToDate(request.getParameter("datein"));
-        Date dateout = Utils.convertStringToDate(request.getParameter("dateout"));
-        float deposite = Utils.parseFloatParameter(request.getParameter("deposit"));
-        float priceTotal = Utils.parseFloatParameter(request.getParameter("priceTotal"));
-        // create object mapped to room is used (set 0 to ensure data accuracy)
-        UsingRoom usingRoom = new UsingRoom(id, 0, datein, dateout, deposite, deposite);
-        usingRoom.insert(usingRoom);
-        // create relation between UsingRoom and Customer
-        NumberUser users = new NumberUser(customers, usingRoom);
-        users.insert(users);
-        //check that check-in from booking or not 
-        Booking b = (Booking) session.getAttribute("booking");
-        if (b != null) {
-            b.delete(b);
+        Customer customer = new Customer();
+        if (customer.getById(id) == null) {
+            customer = new Customer(fullName, (Date) Date.valueOf(dob), sex, phone, id, nationality);
+            customer.insert(customer);
+        } else {
+            customer = customer.getById(id);
         }
-        session.removeAttribute("roomnum");
-        session.removeAttribute("users");
-        session.removeAttribute("booking");
-        response.sendRedirect("listroom");
+        //add session
+        List<Customer> users;
+        HttpSession session = request.getSession();
+        if (session.getAttribute("users") == null) {
+            users = new ArrayList<>();
+        } else {
+            users = (List<Customer>) session.getAttribute("users");
+        }
+
+        users.add(customer);
+        session.setAttribute("users", users);
+        request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
     }
 
     /**
