@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
 import java.util.ArrayList;
 import model.Booking;
@@ -71,41 +72,39 @@ public class InOutRoomServlet extends HttpServlet {
             response.sendRedirect("index.html");
             return;
         }
-        String id = request.getParameter("roomnum");
+        String roomNum = request.getParameter("roomnum");
         switch (action) {
             case "checkin" -> {
-                if (new UsingRoom().getById(id) == null) {
+                if (new UsingRoom().getById(roomNum) == null) {
                     request.setAttribute("countries", ApiCountry.countries);
-                    request.setAttribute("roomnum", id);
+                    request.setAttribute("roomnum", roomNum);
                     request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
                 }
             }
             case "booking" -> {
                 String idBooking = request.getParameter("ID");
-
                 Booking booking = new Booking().getById(idBooking);
+                HttpSession session = request.getSession();
                 if (new UsingRoom().getById(booking.getRoomNumber()) == null) {
-                    request.setAttribute("booking", booking);
+                    session.setAttribute("booking", booking);
                     request.setAttribute("countries", ApiCountry.countries);
                     request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
-                } else {
-                    response.sendRedirect("index.html");
                 }
             }
             case "edit" -> {
-                Room room = new Room().getById(id);
+                Room room = new Room().getById(roomNum);
                 request.setAttribute("room", room);
                 request.getRequestDispatcher("PageRoom/updateroom.jsp").forward(request, response);
             }
 
             case "checkout" -> {
                 //delete NumberUser 
-                Room room = new Room().getById(id);
+                Room room = new Room().getById(roomNum);
                 NumberUser numberUser = new NumberUser().getByRoom(room);
                 numberUser.delete(numberUser);
 
                 //delete UsingRoom through model mapped
-                UsingRoom usingRoom = new UsingRoom().getById(id);
+                UsingRoom usingRoom = new UsingRoom().getById(roomNum);
                 usingRoom.delete(usingRoom);
 
                 response.sendRedirect("listroom");

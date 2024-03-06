@@ -54,4 +54,8 @@ public class Customer extends Person implements Serializable {
     public int update(Customer o) {
         return new CustomerDao().update(o);
     }
+
+    public List<Customer> getListById(String id) {
+        return new CustomerDao().searchListById(id);
+    }
 }

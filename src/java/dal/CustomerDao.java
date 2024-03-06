@@ -1,7 +1,8 @@
 package dal;
 
-import Interface.DAOInterface;
+
 import DBConnection.DBContext;
+import Interface.DAOInterface;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -124,6 +125,29 @@ public class CustomerDao extends DBContext implements DAOInterface<Customer> {
             e.printStackTrace();
         }
         return count;
+    }
+    
+        public ArrayList<Customer> searchListById(String idPattern) {
+        ArrayList<Customer> list = new ArrayList<>();
+        String sqlCommand = "SELECT * FROM tblCustomer WHERE id LIKE ?";
+        try (PreparedStatement st = connection.prepareStatement(sqlCommand)) {
+            st.setString(1, "%" + idPattern + "%");
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    Customer cus = new Customer(
+                            rs.getString("FullName"),
+                            rs.getDate("DOB"),
+                            rs.getBoolean("Gender"),
+                            rs.getString("Phone"),
+                            rs.getString("Id"),
+                            rs.getString("Nationality"));
+                    list.add(cus);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public static void main(String[] args) {

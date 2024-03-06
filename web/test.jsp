@@ -1,40 +1,22 @@
 <%-- 
-    Document   : test
-    Created on : Mar 1, 2024, 9:02:23 PM
+    Document   : addroom
+    Created on : Feb 27, 2024, 9:56:06 PM
     Author     : Dai Nhan
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set value="${sessionScope.booking}" var="booking"/>
 <!DOCTYPE html>
 <html>
-<head>
-    <title>JSON Example</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // AJAX request to fetch JSON data
-            $.ajax({
-                url: 'https://countriesnow.space/api/v0.1/countries/currency', 
-                dataType: 'json',
-                success: function(data) {
-                    // Parse JSON data
-                    var jsonData = data.data;
+    <head>
+        <meta charset="UTF-8">
+        <title>Add Booking</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-                    var html = '<ul>';
-                    $.each(jsonData, function(index, item) {
-                        html += '<li>' + item.name + ': ' + item.currency + '</li>';
-                    });
-                    html += '</ul>';
-                    $('#output').html(html);
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error fetching JSON data: ' + error);
-                }
-            });
-        });
-    </script>
-</head>
-<body>
-    <div id="output"></div>
-</body>
+    </head>
+    <body>
+        ${booking}
+    </body>
 </html>
