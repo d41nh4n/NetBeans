@@ -4,39 +4,40 @@
  */
 package model;
 
+import dal.HistoryDao;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Dai Nhan
  */
 public class History {
-    private String id;
+
+    private int id;
     private String roomNum;
     private int numberCus;
     private Date dateIn;
     private Date dateOut;
     private float totalMoney;
-    
-    private HistoryNumberUser historyNumUser;
+
     public History() {
     }
 
-    public History(String id, String roomNum, int numberCus, Date dateIn, Date dateOut, float totalMoney, HistoryNumberUser historyNumUser) {
+    public History(int id, String roomNum, int numberCus, Date dateIn, Date dateOut, float totalMoney) {
         this.id = id;
         this.roomNum = roomNum;
         this.numberCus = numberCus;
         this.dateIn = dateIn;
         this.dateOut = dateOut;
         this.totalMoney = totalMoney;
-        this.historyNumUser = historyNumUser;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -80,13 +81,36 @@ public class History {
         this.totalMoney = totalMoney;
     }
 
-    public HistoryNumberUser getHistoryNumUser() {
-        return historyNumUser;
+    @Override
+    public String toString() {
+        return "History{" + "id=" + id + ", roomNum=" + roomNum + ", numberCus=" + numberCus + ", dateIn=" + dateIn + ", dateOut=" + dateOut + ", totalMoney=" + totalMoney + ", historyNumUser=" + '}';
     }
 
-    public void setHistoryNumUser(HistoryNumberUser historyNumUser) {
-        this.historyNumUser = historyNumUser;
+    public boolean create(History history) {
+        return new HistoryDao().createHistory(history);
     }
-    
-    
+
+    public boolean update(History history) {
+        return new HistoryDao().updateHistory(history);
+    }
+
+    public boolean delete(History history) {
+        return new HistoryDao().deleteHistory(history.getId());
+    }
+
+    public List<History> getAll() {
+        return new HistoryDao().getAllHistory();
+    }
+
+    public History getById(History history) {
+        return new HistoryDao().getById(history.getId());
+    }
+
+    public List<History> getByPage(int index, String choice) {
+        return new HistoryDao().getByPage(index,choice);
+    }
+
+    public int count() {
+        return new HistoryDao().countHistory();
+    }
 }

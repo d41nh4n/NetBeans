@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import model.Booking;
 import model.Customer;
+import model.History;
 import model.NumberUser;
 import model.Room;
 import model.UsingRoom;
@@ -117,6 +118,10 @@ public class InOutRoomServlet extends HttpServlet {
                 //delete UsingRoom through model mapped
                 UsingRoom usingRoom = new UsingRoom().getById(roomNum);
                 usingRoom.delete(usingRoom);
+
+                //insert History
+                History history = new History(0, room.getRoomNum(), numberUser.numberUser(), usingRoom.getDatein(), usingRoom.getDateout(), usingRoom.getPriceTotal());
+                history.create(history);
 
                 response.sendRedirect("listroom");
             }

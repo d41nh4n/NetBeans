@@ -42,6 +42,10 @@ public class NumberUser {
         customers.add(customer);
     }
 
+    public int numberUser() {
+        return customers.size();
+    }
+
     @Override
     public String toString() {
         return "NumberUser{" + "customers=" + customers + ", usingRoom=" + usingRoom + '}';
