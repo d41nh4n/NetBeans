@@ -76,11 +76,13 @@ public class CheckInServelet extends HttpServlet {
             users = (List<Customer>) session.getAttribute("users");
         }
         Customer selectedCustomer = new Customer().getById(id);
-
+        
         if (selectedCustomer != null) {
             users.add(selectedCustomer);
         }
         session.setAttribute("users", users);
+        
+        
         request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
     }
 

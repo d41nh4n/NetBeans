@@ -20,16 +20,16 @@
     <body>
         <header><jsp:include page="../menu.jsp"/></header>
         <div class="mx-32">
-            <h2 class="text-3xl font-bold dark:text-dark my-5 flex justify-center">History</h2>
-            <form action="listhistory" method="get">
+            <h2 class="text-3xl font-bold dark:text-dark my-5 flex justify-center">History Receive Money</h2>
+            <form action="listhistoryrm" method="get">
                 <select id="searchchoice" name="searchchoice">
                     <option value="id" <c:if test="${choice == 'id'}">selected</c:if>>default</option>
-                    <option value="dateinoldtonew" <c:if test="${choice == 'dateinoldtonew'}">selected</c:if>>Sort by date-in old to new</option>
-                    <option value="dateinnewtoold" <c:if test="${choice == 'dateinnewtoold'}">selected</c:if>>Sort by date-in new to old</option>
-                    <option value="dateoutoldtonew" <c:if test="${choice == 'dateoutoldtonew'}">selected</c:if>>Sort by date-out old to new</option>
-                    <option value="dateoutoldtonew" <c:if test="${choice == 'dateoutoldtonew'}">selected</c:if>>Sort by date-out new to old</option>
-                    <option value="pricelowtohigh" <c:if test="${choice == 'pricelowtohigh'}">selected</c:if>>Sort by price from low to high</option>
-                    <option value="pricehightolow" <c:if test="${choice == 'pricehightolow'}">selected</c:if>>Sort by price from high to low</option>
+                    <option value="sortbyroomfromlowtohigh" <c:if test="${choice == 'sortbyroomfromlowtohigh'}">selected</c:if>>Sort by room num from low to high</option>
+                    <option value="sortbyroomfromhightolow" <c:if test="${choice == 'sortbyroomfromhightolow'}">selected</c:if>>Sort by room num from high to low</option>
+                    <option value="datepaynewtoold" <c:if test="${choice == 'datepaynewtoold'}">selected</c:if>>Sort by date-pay new to old</option>
+                    <option value="datepayoldtonew" <c:if test="${choice == 'datepayoldtonew'}">selected</c:if>>Sort by date-pay old to new</option>
+                    <option value="moneylowtohigh" <c:if test="${choice == 'moneylowtohigh'}">selected</c:if>>Sort by money from low to high</option>
+                    <option value="moneyhightolow" <c:if test="${choice == 'moneyhightolow'}">selected</c:if>>Sort by money from high to low</option>
                     </select>
                     <input type="submit" value="Sort">
                 </form>
@@ -45,17 +45,17 @@
                                     <th scope="col" class="px-6 py-4">
                                         Room Num
                                     </th>
-                                    <th scope="col" class="px-3 py-4">
-                                        Number User
-                                    </th>
                                     <th scope="col" class="px-8 py-4">
-                                        Date In
-                                    </th>
-                                    <th scope="col" class="px-8 py-4">
-                                        Date Out
+                                        Date Pay
                                     </th>
                                     <th scope="col" class="px-10 py-4">
-                                        TotalMoney
+                                        Money
+                                    </th>
+                                    <th scope="col" class="px-10 py-4">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="px-6 py-4">
+                                        User Name
                                     </th>
                                 </tr>
                             </thead>
@@ -68,17 +68,17 @@
                                         <td class="px-6 py-4">
                                             ${history.roomNum}
                                         </td>
-                                        <td class="px-3 py-4">
-                                            ${history.numberCus}
-                                        </td>
                                         <td class="px-8 py-4">
-                                            <fmt:formatDate pattern="MM-dd-yyyy" value="${history.dateIn}" />
-                                        </td>
-                                        <td class="px-8 py-4">
-                                            <fmt:formatDate pattern="MM-dd-yyyy" value="${history.dateIn}" />
+                                            <fmt:formatDate pattern="MM-dd-yyyy" value="${history.datePay}" />
                                         </td>
                                         <td class="px-10 py-4">
-                                             <fmt:formatNumber value="${history.totalMoney}" type="number" pattern="#,##0" />  
+                                            ${history.money}
+                                        </td>
+                                        <td class="px-10 py-4">
+                                            ${history.status}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            ${history.userName}
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -93,9 +93,11 @@
             </c:choose>
             <div class="mx-16">
                 <c:forEach begin="1" end="${numberPage}" var="i">
-                    <a href="listhistory?page=${i}&searchchoice=${searchchoice}" class="inline-block w-10 h-7 text-center bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 mx-0.5 my-8">${i}</a>
+                    <a href="listhistoryrm?page=${i}&searchchoice=${searchchoice}" class="inline-block w-10 h-7 text-center bg-white text-gray-700 border border-gray-300 rounded-md hover:bg-gray-100 mx-0.5 my-8">${i}</a>
                 </c:forEach>
             </div>
         </div>
+
+        ${numberPage}
     </body>
 </html>

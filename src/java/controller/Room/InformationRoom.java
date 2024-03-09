@@ -11,6 +11,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Date;
+import java.util.List;
+import model.HistoryReceiveMoney;
 import model.NumberUser;
 import model.Room;
 
@@ -65,6 +68,19 @@ public class InformationRoom extends HttpServlet {
             if (room.getUsingRoom() != null) {
                 NumberUser numUser = new NumberUser().getByRoom(room);
                 request.setAttribute("user", numUser);
+                //get number day use
+                Date dateOut = numUser.getUsingRoom().getDateout();
+                Date dateIn = numUser.getUsingRoom().getDatein();
+                long differenceInMilliseconds = dateOut.getTime() - dateIn.getTime();
+                int daysUse = (int) (differenceInMilliseconds / (1000 * 60 * 60 * 24));
+                
+                if (daysUse > 27) {
+                    request.setAttribute("status", "month");
+                }
+
+                //get history pay rent
+                List<HistoryReceiveMoney> list = new HistoryReceiveMoney().getByRoom(id, dateIn, dateOut);
+                request.setAttribute("list", list);
             }
             request.setAttribute("room", room);
             request.getRequestDispatcher("PageRoom/inforroom.jsp").forward(request, response);

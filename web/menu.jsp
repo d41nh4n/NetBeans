@@ -93,10 +93,9 @@
                         data-te-nav-item-ref>
                         <a
                             class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
-                            href="#"
+                            href="listhistory"
                             data-te-nav-link-ref
-                            >Income</a
-                        >
+                            >History</a>
                     </li>
                 </ul>
             </div>

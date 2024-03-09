@@ -157,7 +157,35 @@ public class BookingDao extends DBContext implements DAOInterface<Booking> {
         }
         return rowsAffected;
     }
-     public static void main(String[] args) {
+
+    public List<Booking> getByRoomNumber(String roomNumber) {
+        List<Booking> bookings = new ArrayList<>();
+        String sqlCommand = "SELECT * FROM tblBooking WHERE RoomNumber = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sqlCommand)) {
+            statement.setString(1, roomNumber);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Booking booking = new Booking(
+                        resultSet.getString("Id"),
+                        resultSet.getString("CustomerName"),
+                        resultSet.getString("RoomNumber"),
+                        resultSet.getDate("DateIn"),
+                        resultSet.getDate("DateOut"),
+                        resultSet.getDate("ExecDate"),
+                        resultSet.getFloat("Deposit"),
+                        resultSet.getString("Contact")
+                );
+                bookings.add(booking);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookings;
+    }
+
+    public static void main(String[] args) {
         // Tạo một đối tượng Booking mới
         Booking booking = new Booking();
         booking.setId("1");
@@ -171,13 +199,7 @@ public class BookingDao extends DBContext implements DAOInterface<Booking> {
 
         // Tạo một đối tượng BookingDao và chèn đối tượng Booking vào cơ sở dữ liệu
         BookingDao bookingDao = new BookingDao();
-        int result = bookingDao.insert(booking);
-
-        // Kiểm tra kết quả của việc chèn
-        if (result == 1) {
-            System.out.println("Booking inserted successfully.");
-        } else {
-            System.out.println("Failed to insert booking.");
-        }
+        System.out.println(bookingDao.getByRoomNumber("P101"));
     }
+   
 }

@@ -7,13 +7,15 @@ package model;
 import dal.BookingDao;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author Dai Nhan
  */
-
 public class Booking implements Serializable {
 
     private String id;
@@ -24,7 +26,7 @@ public class Booking implements Serializable {
     private Date execDate;
     private Float deposite;
     private String contact;
-    
+
     public Booking() {
     }
 
@@ -107,12 +109,20 @@ public class Booking implements Serializable {
     public String toString() {
         return "Booking{" + "id=" + id + ", customerName=" + customerName + ", roomNumber=" + roomNumber + ", dateIn=" + dateIn + ", dateOut=" + dateOut + ", execDate=" + execDate + ", deposite=" + deposite + ", contact=" + contact + '}';
     }
-    
+
+    public static void sortByDateIn(List<Booking> list) {
+        Collections.sort(list, new Comparator<Booking>() {
+            @Override
+            public int compare(Booking booking1, Booking booking2) {
+                return booking1.getDateIn().compareTo(booking2.getDateIn());
+            }
+        });
+    }
 
     public List<Booking> getAllBookings() {
         return new BookingDao().getAll();
     }
-    
+
     public Booking getById(String id) {
         return new BookingDao().getById(id);
     }
@@ -128,6 +138,8 @@ public class Booking implements Serializable {
     public int update(Booking booking) {
         return new BookingDao().update(booking);
     }
-    
-    
+
+    public List<Booking> getByRoomNum(String roomNum) {
+        return new BookingDao().getByRoomNumber(roomNum);
+    }
 }

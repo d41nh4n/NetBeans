@@ -87,8 +87,7 @@ public class EditRoomServlet extends HttpServlet {
         usingRoom.setPriceTotal(priceTotal);
         // update database throught object mapped
         usingRoom.update(usingRoom);
-
-        response.sendRedirect("listroom");
+        response.sendRedirect("inforroom?roomnum="+id);
     }
 
     /**

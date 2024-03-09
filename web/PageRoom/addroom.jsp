@@ -76,15 +76,15 @@
         <form action="checkin" method="post">
             <input type="hidden" name="id" value="${booking.id}">
             <label for="datein">Date In:</label>
-            <input type="date" id="datein" name="datein" required value="${sessionScope.datein}"><br>
+            <input type="date" id="datein" name="datein" required value="${booking.dateIn}"><br>
             <label for="dateout">Date Out:</label>
-            <input type="date" id="dateout" name="dateout" required value="${sessionScope.dateout}"><br>
+            <input type="date" id="dateout" name="dateout" required value="${booking.dateOut}"><br>
             <label for="deposit">Deposit:</label>
             <select id="deposit" name="deposit">
                 <option value="0">None</option>
-                <option value="5000000" <c:if test="${sessionScope.deposit == '5000000'}">selected</c:if>>5 million</option>
-                <option value="10000000"  <c:if test="${sessionScope.deposit == '10000000'}">selected</c:if>>10 million</option>
-                <option value="15000000"  <c:if test="${sessionScope.deposit == '15000000'}">selected</c:if>>15 million</option>
+                <option value="5000000" <c:if test="${booking.deposite == '5000000'}">selected</c:if>>5 million</option>
+                <option value="10000000"  <c:if test="${booking.deposite == '10000000'}">selected</c:if>>10 million</option>
+                <option value="15000000"  <c:if test="${booking.deposite == '15000000'}">selected</c:if>>15 million</option>
                 </select><br>
             <c:choose>
                 <c:when test="${ not empty booking}">

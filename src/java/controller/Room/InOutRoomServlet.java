@@ -94,6 +94,9 @@ public class InOutRoomServlet extends HttpServlet {
             }
             case "booking" -> {
                 String idBooking = request.getParameter("ID");
+                if(session.getAttribute("users") != null){
+                    session.removeAttribute("users");
+                }
                 Booking booking = new Booking().getById(idBooking);
                 if (new UsingRoom().getById(booking.getRoomNumber()) == null) {
                     if (session.getAttribute("booking") != null) {

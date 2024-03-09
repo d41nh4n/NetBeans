@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
 import model.Booking;
+import model.HistoryReceiveMoney;
 
 /**
  *
@@ -74,13 +75,17 @@ public class AddBookingServlet extends HttpServlet {
         String currentDate = request.getParameter("currentDateInput");
         float deposit = Utils.parseFloatParameter(request.getParameter("deposit"));
         String contact = request.getParameter("contact");
-
+        //add booking
+        
         b.insert(new Booking(Utils.randomIdBooking(roomNumber), customerName, roomNumber,
                 Date.valueOf(dateIn),
                 Date.valueOf(dateOut),
                 Date.valueOf(currentDate),
                 deposit,
                 contact));
+        //add history receive money
+        HistoryReceiveMoney historyReceiveMoney = new HistoryReceiveMoney(0, roomNumber, Date.valueOf(currentDate), deposit, "Deposit", "admin");
+        historyReceiveMoney.insert(historyReceiveMoney);
         response.sendRedirect("listbooking");
     }
 
@@ -88,5 +93,5 @@ public class AddBookingServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }
-
+    
 }
