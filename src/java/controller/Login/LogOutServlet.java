@@ -4,7 +4,6 @@
  */
 package controller.Login;
 
-import Utils.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,18 +11,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
-import java.time.LocalDate;
-import model.Account;
-import model.Customer;
-import model.Employee;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
  * @author Dai Nhan
  */
-@WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
-public class RegisterServlet extends HttpServlet {
+@WebServlet(name = "LogOutServlet", urlPatterns = {"/logout"})
+public class LogOutServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +37,10 @@ public class RegisterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
+            out.println("<title>Servlet LogOutServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LogOutServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,7 +58,11 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("manager") != null) {
+            session.invalidate();
+        }
+        response.sendRedirect("PageLogin/login.jsp");
     }
 
     /**
@@ -77,32 +76,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fullName = request.getParameter("fullname");
-        String dob = request.getParameter("dob");
-        String gender = request.getParameter("sex");
-        String phone = request.getParameter("phone");
-        String id = request.getParameter("id");
-        String email = request.getParameter("email");
-        String user = request.getParameter("user");
-        String pass = request.getParameter("pass");
-        Account acByUser = new Account().getById(user);
-        Account acByMail = new Account().getByEmail(email);
-        if (acByUser != null) {
-            request.setAttribute("error", "This user was existed!");
-            request.getRequestDispatcher("PageLogin/register.jsp").forward(request, response);
-        } else if (acByMail != null) {
-            request.setAttribute("error", "This email was existed!");
-            request.getRequestDispatcher("PageLogin/register.jsp").forward(request, response);
-        }
-
-        Account ac = new Account(user, pass, 1, email);
-        ac.insert(ac);
-        
-        System.out.println(ac.toString());
-        Employee e = new Employee(fullName, Date.valueOf(dob), Utils.parseBooleanParameter(gender), phone, id, user);
-        e.insert(e);
-        request.setAttribute("notice", "Account is registed successfullly, Wait the admin approve!");
-        request.getRequestDispatcher("PageLogin/login.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**

@@ -17,7 +17,7 @@
 
     </head>
     <body>
-        <c:forEach items="${booking}" var="u">
+        <c:forEach items="${sessionScope.manager}" var="u">
             ${u}
         </c:forEach>
     </body>

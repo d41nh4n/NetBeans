@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
     <!-- TW Elements is free under AGPL, with commercial license required for specific uses. See more details: https://tw-elements.com/license/ and contact us for queries at tailwind@mdbootstrap.com --> 
@@ -97,6 +98,43 @@
                             data-te-nav-link-ref
                             >History</a>
                     </li>
+                    <li
+                        class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                        data-te-nav-item-ref>
+                        <a
+                            class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
+                            href="listemployee"
+                            data-te-nav-link-ref
+                            >Employee</a>
+                    </li>
+                    <li
+                        class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                        data-te-nav-item-ref>
+                        <a
+                            class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
+                            href="listaccount"
+                            data-te-nav-link-ref
+                            >Account</a>
+                    </li>
+                    <!-- Login - Logout -->
+                    <c:if test="${ not empty sessionScope.manager}">
+                        <li
+                            class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                            data-te-nav-item-ref>
+                            <a
+                                class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
+                                href="logout"
+                                data-te-nav-link-ref
+                                >LogOut</a>
+                        </li>
+                    </c:if>
+                    <c:if test="${not empty sessionScope.manager}">
+                        <li
+                            class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                            data-te-nav-item-ref>
+                            Hello ${sessionScope.manager.userName}
+                        </li>
+                    </c:if>
                 </ul>
             </div>
         </div>

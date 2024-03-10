@@ -1,32 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author Dai Nhan
- */
+import java.util.Date;
+
+
 public class UserModel {
 
     private String id;
     private String email;
+    private boolean verified_email;
     private String name;
     private String given_name;
     private String family_name;
+    private String gender; // Thêm trường giới tính
     private String picture;
+    private Date dob;
+    private String phone;
 
     public UserModel() {
     }
 
-    public UserModel(String id, String email, String name, String given_name, String family_name, String picture) {
+    public UserModel(String id, String email, boolean verified_email, String name, String given_name, String family_name, String gender, String picture, Date dob, String phone) {
         this.id = id;
         this.email = email;
+        this.verified_email = verified_email;
         this.name = name;
         this.given_name = given_name;
         this.family_name = family_name;
+        this.gender = gender; // Khởi tạo giới tính
         this.picture = picture;
+        this.dob = dob;
+        this.phone = phone;
     }
 
     public String getId() {
@@ -43,6 +46,14 @@ public class UserModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isVerified_email() {
+        return verified_email;
+    }
+
+    public void setVerified_email(boolean verified_email) {
+        this.verified_email = verified_email;
     }
 
     public String getName() {
@@ -69,6 +80,14 @@ public class UserModel {
         this.family_name = family_name;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getPicture() {
         return picture;
     }
@@ -77,10 +96,24 @@ public class UserModel {
         this.picture = picture;
     }
 
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     @Override
     public String toString() {
-        return "UserModel{" + "id=" + id + ", email=" + email + ", name=" + name + ", given_name=" + given_name + ", family_name=" + family_name + ", picture=" + picture + '}';
+        return "UserModel{" + "id=" + id + ", email=" + email + ", verified_email=" + verified_email + ", name=" + name + ", given_name=" + given_name + ", family_name=" + family_name + ", gender=" + gender + ", picture=" + picture + ", dob=" + dob + ", phone=" + phone + '}';
     }
-    
-   
 }

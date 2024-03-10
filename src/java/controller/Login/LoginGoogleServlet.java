@@ -11,8 +11,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import model.Account;
 import model.UserModel;
 
 import org.apache.http.client.ClientProtocolException;
@@ -41,6 +43,20 @@ public class LoginGoogleServlet extends HttpServlet {
         String accessToken = getToken(code);
         UserModel user = getUserInfo(accessToken);
         System.out.println(user);
+        Account ac = new Account().getById(user.getEmail());
+        if (ac != null) {
+            if (!ac.isStatus()) {
+                request.setAttribute("error", "Login fail !");
+                request.getRequestDispatcher("PageLogin/login.jsp").forward(request, response);
+            } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("manager", ac);
+                response.sendRedirect("listbooking");
+            }
+        } else {
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("PageLogin/register.jsp").forward(request, response);
+        }
     }
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
