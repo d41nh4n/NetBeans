@@ -87,12 +87,12 @@
                     <h2 class="text-lg font-bold">Pay Rent</h2>
                     <button class="text-gray-500 hover:text-gray-700" onclick="closeModelDeposit()">&times;</button>
                 </div>
-                <form action="insertrm" method="post">
                     <h2>Amount money ${room.roomNum} have to pay for next month is:</h2> 
                     <input type="number" value="${room.pricePerMonth}" name="money"><br>
                     <input type="hidden" value="${room.roomNum}" name="roomnum"><br>
+                    <a href="" class="">Pay with VNPay</a>
+                    <a href="" class="">Pay by cash</a>
                     </select><br>
-                    <input type="submit" value="Submit">
                 </form>
             </div>
         </div>

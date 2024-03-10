@@ -67,7 +67,6 @@ public class AddBookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Booking b = new Booking();
         String customerName = request.getParameter("customerName");
         String roomNumber = request.getParameter("roomNumber");
         String dateIn = request.getParameter("dateIn");
@@ -75,23 +74,35 @@ public class AddBookingServlet extends HttpServlet {
         String currentDate = request.getParameter("currentDateInput");
         float deposit = Utils.parseFloatParameter(request.getParameter("deposit"));
         String contact = request.getParameter("contact");
-        //add booking
-        
-        b.insert(new Booking(Utils.randomIdBooking(roomNumber), customerName, roomNumber,
+        //check booking
+        Booking booking = new Booking(Utils.randomIdBooking(roomNumber), customerName, roomNumber,
                 Date.valueOf(dateIn),
                 Date.valueOf(dateOut),
                 Date.valueOf(currentDate),
                 deposit,
-                contact));
-        //add history receive money
-        HistoryReceiveMoney historyReceiveMoney = new HistoryReceiveMoney(0, roomNumber, Date.valueOf(currentDate), deposit, "Deposit", "admin");
-        historyReceiveMoney.insert(historyReceiveMoney);
-        response.sendRedirect("listbooking");
+                contact);
+        if (Utils.checkDateInOfRoom(booking)) {
+            //add booking
+            booking.insert(booking);
+            //add history receive money
+            HistoryReceiveMoney historyReceiveMoney = new HistoryReceiveMoney(0, roomNumber, Date.valueOf(currentDate), deposit, " Receive Deposit", "admin");
+            historyReceiveMoney.insert(historyReceiveMoney);
+            response.sendRedirect("listbooking");
+        } else {
+            request.setAttribute("customerName", customerName);
+            request.setAttribute("roomNumber", roomNumber);
+            request.setAttribute("dateIn", dateIn);
+            request.setAttribute("dateOut", dateOut);
+            request.setAttribute("deposit", deposit);
+            request.setAttribute("contact", contact);
+            request.setAttribute("error", "There is an error in the check-in date or check-out date, please check again");
+            request.getRequestDispatcher("PageBooking/addbooking.jsp").forward(request, response);
+        }
     }
 
     @Override
     public String getServletInfo() {
         return "Short description";
     }
-    
+
 }

@@ -76,13 +76,12 @@ public class CheckInServelet extends HttpServlet {
             users = (List<Customer>) session.getAttribute("users");
         }
         Customer selectedCustomer = new Customer().getById(id);
-        
+
         if (selectedCustomer != null) {
             users.add(selectedCustomer);
         }
         session.setAttribute("users", users);
-        
-        
+
         request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
     }
 
@@ -109,19 +108,26 @@ public class CheckInServelet extends HttpServlet {
         float priceTotal = Utils.parseFloatParameter(request.getParameter("priceTotal"));
         // create object mapped to room is used (set 0 to ensure data accuracy)
         UsingRoom usingRoom = new UsingRoom(id, 0, datein, dateout, deposite, deposite);
-        usingRoom.insert(usingRoom);
-        // create relation between UsingRoom and Customer
-        NumberUser users = new NumberUser(customers, usingRoom);
-        users.insert(users);
-        //check that check-in from booking or not 
-        Booking b = (Booking) session.getAttribute("booking");
-        if (b != null) {
-            b.delete(b);
+
+        //check date-in, date-out
+        if (Utils.checkDateInUsingRoom(usingRoom)) {
+            usingRoom.insert(usingRoom);
+            // create relation between UsingRoom and Customer
+            NumberUser users = new NumberUser(customers, usingRoom);
+            users.insert(users);
+            //check that check-in from booking or not 
+            Booking b = (Booking) session.getAttribute("booking");
+            if (b != null) {
+                b.delete(b);
+            }
+            session.removeAttribute("roomnum");
+            session.removeAttribute("users");
+            session.removeAttribute("booking");
+            response.sendRedirect("listroom");
+        } else {
+            request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
         }
-        session.removeAttribute("roomnum");
-        session.removeAttribute("users");
-        session.removeAttribute("booking");
-        response.sendRedirect("listroom");
+
     }
 
     /**

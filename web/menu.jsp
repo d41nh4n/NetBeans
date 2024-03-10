@@ -12,7 +12,7 @@
     <header>
         <script src="https://cdn.tailwindcss.com"></script>
     </header>
- 
+
     <nav
         class="relative flex w-full flex-nowrap items-center justify-between bg-neutral-800 py-2 text-neutral-500 shadow-lg hover:text-neutral-700 focus:text-neutral-700 lg:flex-wrap lg:justify-start lg:py-4"
         data-te-navbar-ref>
@@ -93,7 +93,7 @@
                         data-te-nav-item-ref>
                         <a
                             class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
-                            href="listhistory"
+                            href="choicehistory"
                             data-te-nav-link-ref
                             >History</a>
                     </li>

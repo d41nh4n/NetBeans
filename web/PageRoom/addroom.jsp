@@ -56,46 +56,52 @@
         </script>
     </head>
     <body>
-        <h2>Add Booking</h2>
-        <!-- Button trigger modal -->
-        <button type="button" class=" bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"  onclick="openModal()">
-            Add New Customer
-        </button><br>
-        <!-- Session User -->
-        <c:forEach var="user" items="${sessionScope.users}" varStatus="loop">
-            <h3>Customer ${loop.index + 1}</h3>
-            <div class="flex space-x-4">
-                <p>ID: ${user.id}</p>
-                <p>Full Name: ${user.fullName}</p>
-                <p>Date of Birth: <fmt:formatDate pattern="MM-dd-yyyy" value="${user.dob}" /></p>
-                <p>Gender: ${functions:convertGender(user.sex)}</p>
-                <p>Phone: ${user.phone}</p>
-                <p>Nationality: ${user.nationality}</p>
-            </div>
-        </c:forEach>
-        <form action="checkin" method="post">
-            <input type="hidden" name="id" value="${booking.id}">
-            <label for="datein">Date In:</label>
-            <input type="date" id="datein" name="datein" required value="${booking.dateIn}"><br>
-            <label for="dateout">Date Out:</label>
-            <input type="date" id="dateout" name="dateout" required value="${booking.dateOut}"><br>
-            <label for="deposit">Deposit:</label>
-            <select id="deposit" name="deposit">
-                <option value="0">None</option>
-                <option value="5000000" <c:if test="${booking.deposite == '5000000'}">selected</c:if>>5 million</option>
-                <option value="10000000"  <c:if test="${booking.deposite == '10000000'}">selected</c:if>>10 million</option>
-                <option value="15000000"  <c:if test="${booking.deposite == '15000000'}">selected</c:if>>15 million</option>
-                </select><br>
-            <c:choose>
-                <c:when test="${ not empty booking}">
-                    <input type="hidden" name="roomnum" value="${booking.roomNumber}">
-                </c:when>
-                <c:otherwise>
-                    <input type="hidden" name="roomnum" value="${sessionScope.roomnum}">
-                </c:otherwise>
-            </c:choose>
-            <input type="submit" value="Submit">
-        </form>
+        <header><jsp:include page="../menu.jsp"/></header>
+        <div class="mx-16">
+            <c:if test="${not empty error}">
+                <h3 class="text-red-500">${error}</h3>
+            </c:if>
+            <h2>Add Booking</h2>
+            <!-- Button trigger modal -->
+            <button type="button" class=" bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"  onclick="openModal()">
+                Add New Customer
+            </button><br>
+            <!-- Session User -->
+            <c:forEach var="user" items="${sessionScope.users}" varStatus="loop">
+                <h3>Customer ${loop.index + 1}</h3>
+                <div class="flex space-x-4">
+                    <p>ID: ${user.id}</p>
+                    <p>Full Name: ${user.fullName}</p>
+                    <p>Date of Birth: <fmt:formatDate pattern="MM-dd-yyyy" value="${user.dob}" /></p>
+                    <p>Gender: ${functions:convertGender(user.sex)}</p>
+                    <p>Phone: ${user.phone}</p>
+                    <p>Nationality: ${user.nationality}</p>
+                </div>
+            </c:forEach>
+            <form action="checkin" method="post">
+                <input type="hidden" name="id" value="${booking.id}">
+                <label for="datein">Date In:</label>
+                <input type="date" id="datein" name="datein" required value="${booking.dateIn}"><br>
+                <label for="dateout">Date Out:</label>
+                <input type="date" id="dateout" name="dateout" required value="${booking.dateOut}"><br>
+                <label for="deposit">Deposit:</label>
+                <select id="deposit" name="deposit">
+                    <option value="0">None</option>
+                    <option value="5000000" <c:if test="${booking.deposite == '5000000'}">selected</c:if>>5 million</option>
+                    <option value="10000000"  <c:if test="${booking.deposite == '10000000'}">selected</c:if>>10 million</option>
+                    <option value="15000000"  <c:if test="${booking.deposite == '15000000'}">selected</c:if>>15 million</option>
+                    </select><br>
+                <c:choose>
+                    <c:when test="${ not empty booking}">
+                        <input type="hidden" name="roomnum" value="${booking.roomNumber}">
+                    </c:when>
+                    <c:otherwise>
+                        <input type="hidden" name="roomnum" value="${sessionScope.roomnum}">
+                    </c:otherwise>
+                </c:choose>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
     </body>
     <!-- Search User Modal -->
     <div id="searchModal" class="fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-50 flex justify-center items-center hidden">

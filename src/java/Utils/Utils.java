@@ -5,7 +5,10 @@
 package Utils;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Random;
+import model.Booking;
+import model.UsingRoom;
 
 /**
  *
@@ -68,7 +71,72 @@ public class Utils {
     public static boolean parseBooleanParameter(String parameter) {
         return parameter.equalsIgnoreCase("true");
     }
-    
+
+    //check Date in
+    public static boolean checkDateInOfRoom(Booking booking) {
+        UsingRoom usingRoom = new UsingRoom().getById(booking.getRoomNumber());
+        List<Booking> bookingList = new Booking().getByRoomNum(booking.getRoomNumber());
+
+        return checkOnBookingList(bookingList, booking) && checkOnUsingRoom(usingRoom, booking);
+    }
+
+    public static boolean checkOnUsingRoom(UsingRoom usingRoom, Booking booking) {
+        if (usingRoom == null) {
+            return true;
+        }
+
+        if (usingRoom.getDatein().before(booking.getDateIn())) {
+            return usingRoom.getDateout().before(booking.getDateIn());
+        } else {
+            return usingRoom.getDatein().after(booking.getDateOut());
+        }
+    }
+
+    public static boolean checkOnBookingList(List<Booking> bookingList, Booking booking) {
+        if (!bookingList.isEmpty()) {
+            bookingList.add(booking);
+            Booking.sortByDateIn(bookingList);
+
+            for (Booking b : bookingList) {
+                System.out.println(b.toString());
+            }
+            int index = bookingList.indexOf(booking);
+            int lastIndex = bookingList.size() - 1;
+            if (index == 0) {
+                return booking.getDateOut().before(bookingList.get(1).getDateIn());
+            } else if (index == lastIndex) {
+                return (booking.getDateIn().after(bookingList.get(lastIndex - 1).getDateOut()));
+            } else {
+                return (booking.getDateIn().after(bookingList.get(index - 1).getDateOut()) && booking.getDateOut().before(bookingList.get(index + 1).getDateIn()));
+            }
+        }
+        return true;
+    }
+
+    // check Date in UsingRoom
+    public static boolean checkDateInUsingRoom(UsingRoom usingRoom) {
+        List<Booking> bookingList = new Booking().getByRoomNum(usingRoom.getRoomNum());
+
+        if (bookingList.isEmpty()) {
+            return true;
+        }
+
+        Booking bookingFake = new Booking("", "", usingRoom.getRoomNum(), usingRoom.getDatein(), usingRoom.getDatein(), null, 0f, "");
+        bookingList.add(bookingFake);
+        Booking.sortByDateIn(bookingList);
+
+        int index = bookingList.indexOf(bookingFake);
+        int lastIndex = bookingList.size() - 1;
+
+        if (index == 0) {
+            return bookingFake.getDateOut().before(bookingList.get(1).getDateIn());
+        } else if (index == lastIndex) {
+            return (bookingFake.getDateIn().after(bookingList.get(lastIndex - 1).getDateOut()));
+        } else {
+            return (bookingFake.getDateIn().after(bookingList.get(index - 1).getDateOut()) && bookingFake.getDateOut().before(bookingList.get(index + 1).getDateIn()));
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println(randomIdBooking("P101"));
     }

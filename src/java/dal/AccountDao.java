@@ -3,65 +3,196 @@ package dal;
 import Interface.DAOInterface;
 import DBConnection.DBContext;
 import java.util.ArrayList;
+import java.util.List;
 import model.Account;
 
 /**
  *
  * @author Dai Nhan
  */
-public class AccountDao extends DBContext implements DAOInterface<Account> {
-    
-    private ArrayList<Account> accounts = new ArrayList<>();
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-    public AccountDao() {
-    }
+public class AccountDao extends DBContext implements DAOInterface<Account> {
 
     @Override
-    public ArrayList<Account> getAll() {
+    public List<Account> getAll() {
+        List<Account> accounts = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = this.connection;
+            String sql = "SELECT * FROM tblAccount";
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String username = resultSet.getString("UserName");
+                String password = resultSet.getString("PassWord");
+                int authority = resultSet.getInt("Authority");
+                boolean status = resultSet.getBoolean("Status");
+
+                Account account = new Account(username, password, authority, status);
+                accounts.add(account);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
         return accounts;
     }
 
     @Override
     public Account getById(String id) {
-        for (Account account : accounts) {
-            if (account.getUserName().equals(id)) {
-                return account; 
+        Account account = null;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+           connection = this.connection;
+            String sql = "SELECT * FROM tblAccount WHERE UserName = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, id);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String username = resultSet.getString("UserName");
+                String password = resultSet.getString("PassWord");
+                int authority = resultSet.getInt("Authority");
+                boolean status = resultSet.getBoolean("Status");
+
+                account = new Account(username, password, authority, status);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        return null; 
-    }
-
-    public int insertAll(ArrayList<Account> newAccounts) {
-        accounts.addAll(newAccounts);
-        return newAccounts.size(); 
+        return account;
     }
 
     @Override
-    public int insert(Account newAccount) {
-        accounts.add(newAccount);
-        return 1;
-    }
+    public int insert(Account o) {
+        int rowsAffected = 0;
+        Connection connection = null;
+        PreparedStatement statement = null;
 
-    public int deleteAll(ArrayList<Account> deleteAccounts) {
-        accounts.removeAll(deleteAccounts);
-        return deleteAccounts.size(); 
-    }
-
-    @Override
-    public int delete(Account deleteAccount) {
-        accounts.remove(deleteAccount);
-        return 1; 
-    }
-
-    @Override
-    public int update(Account updatedAccount) {
-        for (int i = 0; i < accounts.size(); i++) {
-            Account existingAccount = accounts.get(i);
-            if (existingAccount.getUserName().equals(updatedAccount.getUserName())) {
-                accounts.set(i, updatedAccount);
-                return 1; 
+        try {
+            connection = this.connection;
+            String sql = "INSERT INTO tblAccount (UserName, PassWord, Authority, Status) VALUES (?, ?, ?, ?)";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, o.getUserName());
+            statement.setString(2, o.getPassWord());
+            statement.setInt(3, o.getRole());
+            statement.setBoolean(4, o.isStatus());
+            rowsAffected = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        return 0;
+        return rowsAffected;
+    }
+
+    @Override
+    public int delete(Account o) {
+        int rowsAffected = 0;
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = this.connection;
+            String sql = "DELETE FROM tblAccount WHERE UserName = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, o.getUserName());
+            rowsAffected = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return rowsAffected;
+    }
+
+    @Override
+    public int update(Account o) {
+        int rowsAffected = 0;
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = this.connection;
+            String sql = "UPDATE tblAccount SET PassWord = ?, Authority = ?, Status = ? WHERE UserName = ?";
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, o.getPassWord());
+            statement.setInt(2, o.getRole());
+            statement.setBoolean(3, o.isStatus());
+            statement.setString(4, o.getUserName());
+            rowsAffected = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return rowsAffected;
     }
 }

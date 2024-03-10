@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.Booking;
+package controller.Login;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,17 +11,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Booking;
-import Utils.Utils;
-import java.sql.Date;
-import model.HistoryReceiveMoney;
+import model.Account;
 
 /**
  *
  * @author Dai Nhan
  */
-@WebServlet(name = "UpdateBookingServlet", urlPatterns = {"/updatebooking"})
-public class UpdateBookingServlet extends HttpServlet {
+@WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
+public class RegisterServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,10 +37,10 @@ public class UpdateBookingServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateBookingServlet</title>");
+            out.println("<title>Servlet RegisterServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateBookingServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -61,14 +58,7 @@ public class UpdateBookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Booking b = new Booking();
-        String id = request.getParameter("ID");
-        if (b.getById(id) == null) {
-            response.sendRedirect("listbooking");
-        } else {
-            request.setAttribute("booking", b.getById(id));
-            request.getRequestDispatcher("PageBooking/updatebooking.jsp").forward(request, response);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -82,31 +72,18 @@ public class UpdateBookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Booking b = new Booking();
+        String fullName = request.getParameter("fullname");
+        String dob = request.getParameter("dob");
+        String gender = request.getParameter("sex");
+        String phone = request.getParameter("phone");
+        String id = request.getParameter("id");
+        String email = request.getParameter("email");
+        String user = request.getParameter("user");
+        String pass = request.getParameter("pass");
 
-        String id = (request.getParameter("Id"));
-        String customerName = request.getParameter("customerName");
-        String roomNumber = request.getParameter("roomNumber");
-        String dateIn = request.getParameter("dateIn");
-        String dateOut = request.getParameter("dateOut");
-        String dateExec = request.getParameter("dateExec");
-        float deposite = Utils.parseFloatParameter(request.getParameter("deposite"));
-        String contact = request.getParameter("contact");
+        if (new Account().getById(user) == null) {
+            Account ac = new Account(user, pass, 0);
 
-        Booking booking = new Booking(id, customerName, roomNumber,
-                Date.valueOf(dateIn),
-                Date.valueOf(dateOut),
-                Date.valueOf(dateExec),
-                deposite, contact);
-        if (Utils.checkDateInOfRoom(booking)) {
-
-            b.update(booking);
-
-            response.sendRedirect("listbooking");
-        } else {
-            request.setAttribute("booking", b.getById(id));
-            request.setAttribute("error", "There is an error in the check-in date or check-out date, please check again");
-            request.getRequestDispatcher("PageBooking/updatebooking.jsp").forward(request, response);
         }
     }
 
