@@ -5,7 +5,6 @@
 package model;
 
 import Interface.Person;
-import dal.AccountDao;
 import dal.EmployeeDAO;
 import java.io.Serializable;
 import java.sql.Date;

@@ -25,7 +25,7 @@
             User<input type="text" name="user" required><br/>
             Password<input type="password" name="pass" required><br/>
             <input type="submit" value="Submit">
-            <input type="submit" value="Register" onclick="window.location.href = 'register.jsp'">
+            <input type="submit" value="Register" onclick="window.location.href = 'register'">
             <a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:8080/Assignment/logingoogle&response_type=code&client_id=471002202148-7er02jdudkrf7st1eha9et0vl5bts920.apps.googleusercontent.com&approval_prompt=force">Login With Google</a>
         </form>
     </body>

@@ -35,6 +35,7 @@ public class Account {
         this.passWord = passWord;
         this.role = role;
         this.status = false;
+        this.email = email;
     }
 
     public String getUserName() {
@@ -81,7 +82,6 @@ public class Account {
     public String toString() {
         return "Account{" + "userName=" + userName + ", passWord=" + passWord + ", role=" + role + ", status=" + status + ", email=" + email + '}';
     }
-    
 
     public List<Account> getAll() {
         return new AccountDao().getAll();

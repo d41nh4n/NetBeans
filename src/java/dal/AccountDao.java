@@ -169,9 +169,9 @@ public class AccountDao extends DBContext implements DAOInterface<Account> {
         }
         return null;
     }
-    
+
     public static void main(String[] args) {
         AccountDao ac = new AccountDao();
-        System.out.println(ac.getByLogin("admin", "admin").isStatus());
+        ac.insert(new Account("admin1", "admin", 1, "nhan@gmail.com"));
     }
 }

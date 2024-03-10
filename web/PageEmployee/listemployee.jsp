@@ -45,7 +45,6 @@
                                     <td class="flex px-4 py-4 justify-between text-sm">
                                         <!-- Link to delete employee -->
                                         <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="doDelete(${employee.id})">Delete</a>
-                                        <!-- Link to update employee -->
                                         <a href="updateemployee?ID=${employee.id}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                     </td>
                                 </tr>

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
+import model.Account;
 import model.History;
 import model.HistoryReceiveMoney;
 
@@ -79,8 +80,8 @@ public class InsertrmServlet extends HttpServlet {
         String roomNum = request.getParameter("roomnum");
         String money = request.getParameter("money");
         HttpSession session = request.getSession();
-//        String userName = (String) session.getAttribute("user");
-        String userName = "admin";
+        Account user = (Account) session.getAttribute("user");
+        String userName = user.getUserName();
         Date currentDate = new Date(System.currentTimeMillis());
 
         HistoryReceiveMoney historyRM = new HistoryReceiveMoney(0, roomNum, currentDate,

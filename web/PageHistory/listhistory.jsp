@@ -78,7 +78,7 @@
                                             <fmt:formatDate pattern="MM-dd-yyyy" value="${history.dateIn}" />
                                         </td>
                                         <td class="px-10 py-4">
-                                             <fmt:formatNumber value="${history.totalMoney}" type="number" pattern="#,##0" />  
+                                            <fmt:formatNumber value="${history.totalMoney}" type="number" pattern="#,##0" />  
                                         </td>
                                     </tr>
                                 </c:forEach>

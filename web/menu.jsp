@@ -98,24 +98,27 @@
                             data-te-nav-link-ref
                             >History</a>
                     </li>
-                    <li
-                        class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
-                        data-te-nav-item-ref>
-                        <a
-                            class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
-                            href="listemployee"
-                            data-te-nav-link-ref
-                            >Employee</a>
-                    </li>
-                    <li
-                        class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
-                        data-te-nav-item-ref>
-                        <a
-                            class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
-                            href="listaccount"
-                            data-te-nav-link-ref
-                            >Account</a>
-                    </li>
+                    <c:if test="${sessionScope.manager.role eq 1}">
+                        <li
+                            class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                            data-te-nav-item-ref>
+                            <a
+                                class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
+                                href="listemployee"
+                                data-te-nav-link-ref
+                                >Employee</a>
+                        </li>
+
+                        <li
+                            class="mb-4 pl-2 lg:mb-0 lg:pl-0 lg:pr-1"
+                            data-te-nav-item-ref>
+                            <a
+                                class="p-0 text-neutral-300 transition duration-200 hover:text-neutral-200 hover:ease-in-out focus:text-neutral-200 disabled:text-black/30 motion-reduce:transition-none lg:px-2 [&.active]:text-black/90 [&.active]:text-neutral-200"
+                                href="listaccount"
+                                data-te-nav-link-ref
+                                >Account</a>
+                        </li>
+                    </c:if>
                     <!-- Login - Logout -->
                     <c:if test="${ not empty sessionScope.manager}">
                         <li
