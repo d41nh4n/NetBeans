@@ -160,7 +160,7 @@ public class HistoryRMDao extends DBContext {
                 historyReceiveMoney.setRoomNum(rs.getString("RoomNum"));
                 historyReceiveMoney.setDatePay(rs.getDate("DatePay"));
                 historyReceiveMoney.setMoney(rs.getFloat("Money"));
-                  historyReceiveMoney.setStatus(rs.getString("Status"));
+                historyReceiveMoney.setStatus(rs.getString("Status"));
                 historyReceiveMoney.setUserName(rs.getString("UserName"));
                 historyReceiveMoneyList.add(historyReceiveMoney);
             }

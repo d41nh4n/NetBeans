@@ -81,6 +81,7 @@ public class LoginServlet extends HttpServlet {
             request.getRequestDispatcher("PageLogin/login.jsp").forward(request, response);
         } else {
             HttpSession session = request.getSession();
+            session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("manager", ac);
             response.sendRedirect("listbooking");
         }

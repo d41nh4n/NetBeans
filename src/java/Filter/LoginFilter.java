@@ -105,12 +105,16 @@ public class LoginFilter implements Filter {
         }
 
         doBeforeProcessing(request, response);
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-        String uri = req.getServletPath();
-        HttpSession session = req.getSession();
-        if (session.getAttribute("manager") == null && uri.contains("home")) {
-            res.sendRedirect("login");
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        HttpSession session = httpRequest.getSession(false);
+
+        // Kiểm tra xem phiên có chứa thuộc tính account không
+        if (session != null && session.getAttribute("manager") != null) {
+            chain.doFilter(request, response);
+        } else {
+            httpResponse.sendRedirect("login");
         }
 
         Throwable problem = null;

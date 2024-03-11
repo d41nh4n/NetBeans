@@ -117,7 +117,7 @@ public class Utils {
     public static boolean checkDateInUsingRoom(UsingRoom usingRoom) {
         List<Booking> bookingList = new Booking().getByRoomNum(usingRoom.getRoomNum());
 
-        if (bookingList.isEmpty()) {
+        if (bookingList.isEmpty() || bookingList.size() == 1) {
             return true;
         }
 

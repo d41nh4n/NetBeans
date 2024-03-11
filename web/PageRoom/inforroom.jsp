@@ -3,8 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="functions" uri="/WEB-INF/tlds/myFunctions" %>
 <c:set var="room" value="${room}"/>
-<c:set var="customer" value="${customer}"/>
-<c:set var="history" value="${list}"/>
+<c:set var="user" value="${user}"/>
 <!DOCTYPE html>
 <html>
     <head>
@@ -52,13 +51,13 @@
             <div class="col-start-3"> 
                 <c:choose>
                     <c:when test="${empty room.usingRoom}">
-                        <a href="checkio?roomnum=${room.roomNum}&action=checkin">Check-in</a>
+                        <a href="checkio?roomnum=${room.roomNum}&action=checkin" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check-in</a>
                     </c:when>
                     <c:otherwise>
-                        <a href="checkio?roomnum=${room.roomNum}&action=edit">Edit</a>
-                        <a href="checkio?roomnum=${room.roomNum}&action=checkout">Check-Out</a>
+                        <a href="checkio?roomnum=${room.roomNum}&action=edit" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</a>
+                        <a href="checkio?roomnum=${room.roomNum}&action=checkout" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Check-Out</a>
                         <c:if test="${status == 'month'}">
-                            <input type="button" value="Deposit"  onclick="openModelDeposit()"/>
+                            <button type="button" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="openModelDeposit()">Deposit</button>
                         </c:if>
                     </c:otherwise>
                 </c:choose>
@@ -122,11 +121,11 @@
             </div>
         </div>
         <div class="col-start-2">
-            <h2>History Pay</h2>
-            <h3>Total Price: </h3>
-            <span class="text-sky-400">0</span>/${room.usingRoom.priceTotal}
 
-            <c:if test="${not empty history}">
+            <c:if test="${not empty list}">
+                <h2>History Pay</h2>
+                <h3>Total Price: </h3>
+                <span class="text-sky-400">0</span>/${room.usingRoom.priceTotal}
                 <table class="w-full text-sm font-sans border-collapse">
                     <thead class="text-white text-left" style="background-color: #009879">
                         <tr>
@@ -139,7 +138,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${history}" var="his">
+                        <c:forEach items="${list}" var="his">
                         <td class="px-3 py-4">
                             <fmt:formatDate pattern="MM-dd-yyyy" value="${his.dateIn}" />
                         </td>
@@ -166,6 +165,7 @@
                 <h2>Amount money ${room.roomNum} have to pay for next month is:</h2> 
                 <input type="number" value="${room.pricePerMonth}" name="money"><br>
                 <input type="hidden" value="${room.roomNum}" name="roomnum"><br>
+                <input type="hidden" value="${sessionScope.manager.userName}" name="manager"><br>
                 <button type="submit" >Pay by cash</button>
             </form>
             </select><br>

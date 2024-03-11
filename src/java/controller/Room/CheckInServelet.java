@@ -127,7 +127,6 @@ public class CheckInServelet extends HttpServlet {
         } else {
             request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
         }
-
     }
 
     /**

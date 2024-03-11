@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+
 package controller.HistoryReceiveMoney;
 
 import Utils.Utils;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import model.Account;
 import model.History;
 import model.HistoryReceiveMoney;
@@ -24,7 +26,7 @@ import model.HistoryReceiveMoney;
  */
 @WebServlet(name = "InsertHRServlet", urlPatterns = {"/insertrm"})
 public class InsertrmServlet extends HttpServlet {
-
+    public static final  Date NOW =  Date.valueOf(LocalDateTime.now().toLocalDate());
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -79,14 +81,13 @@ public class InsertrmServlet extends HttpServlet {
             throws ServletException, IOException {
         String roomNum = request.getParameter("roomnum");
         String money = request.getParameter("money");
-        HttpSession session = request.getSession();
-        Account user = (Account) session.getAttribute("user");
-        String userName = user.getUserName();
-        Date currentDate = new Date(System.currentTimeMillis());
+        String user = request.getParameter("manager");
+        Date currentDate = NOW;
 
         HistoryReceiveMoney historyRM = new HistoryReceiveMoney(0, roomNum, currentDate,
-                Utils.parseFloatParameter(money), "Monthly room fee", userName);
-        historyRM.insert(historyRM);
+                Utils.parseFloatParameter(money), "Monthly room fee", user);
+
+         historyRM.insert(historyRM);
         response.sendRedirect("inforroom?roomnum=" + roomNum);
     }
 

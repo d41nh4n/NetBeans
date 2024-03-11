@@ -77,7 +77,6 @@ public class InformationRoom extends HttpServlet {
                 if (daysUse > 27) {
                     request.setAttribute("status", "month");
                 }
-
                 //get history pay rent
                 List<HistoryReceiveMoney> list = new HistoryReceiveMoney().getByRoom(id, dateIn, dateOut);
                 request.setAttribute("list", list);

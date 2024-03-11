@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Date;
 import model.Customer;
 
@@ -87,7 +90,16 @@ public class AddCustomerServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String id = request.getParameter("id");
         String nationality = request.getParameter("nationality");
+        Part part = request.getPart("photo");
 
+        String realPath = request.getServletContext().getRealPath("/img");
+        String filename = Path.of(part.getSubmittedFileName()).getFileName().toString();
+
+        if (!Files.exists(Path.of(realPath))) {
+            Files.createDirectories(Path.of(realPath));
+        }
+
+        part.write(realPath + "/" + filename);
         Customer customer = new Customer();
         int rs = customer.insert(new Customer(fullName, (Date) Date.valueOf(dob), sex, phone, id, nationality));
         if (rs < 1) {

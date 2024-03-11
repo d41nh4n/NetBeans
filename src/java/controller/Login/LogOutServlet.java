@@ -62,7 +62,7 @@ public class LogOutServlet extends HttpServlet {
         if (session.getAttribute("manager") != null) {
             session.invalidate();
         }
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("login");
     }
 
     /**

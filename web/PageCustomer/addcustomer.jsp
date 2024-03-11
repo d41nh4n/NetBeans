@@ -19,7 +19,7 @@
         <div class="mt-10"> 
             <h1>Customer Input Form</h1>
             <div class="">
-                <form action="addcustomer" method="post">
+                <form action="addcustomer" method="post" enctype="multipart/form-data">
                     <label for="firstname">First Name: </label><br>
                     <input type="text" id="firstname" name="firstname" required><br>
 
@@ -46,6 +46,9 @@
                         <c:forEach items="${sessionScope.countries}" var="country">
                             <option value="${country}" >${country}</option>
                         </c:forEach>     
+
+                        <label>Image</label> <br> 
+                        <input type="file" name="photo" placeholder="Enter photo"> 
                     </select> <br>
                     <input type="submit" value="Submit">
                 </form>
