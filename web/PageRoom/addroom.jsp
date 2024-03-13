@@ -56,14 +56,16 @@
         </script>
     </head>
     <body>
-        <header><jsp:include page="../menu.jsp"/></header>
+        <header>
+            <jsp:include page="../menu.jsp"/>
+        </header>
         <div class="mx-16">
             <c:if test="${not empty error}">
                 <h3 class="text-red-500">${error}</h3>
             </c:if>
-            <h2>Add Booking</h2>
+            <h2 class="text-2xl font-bold mb-4 flex justify-center">Add Booking</h2>
             <!-- Button trigger modal -->
-            <button type="button" class=" bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"  onclick="openModal()">
+            <button type="button" class="bg-gray-400 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onclick="openModal()">
                 Add New Customer
             </button><br>
             <!-- Session User -->
@@ -72,7 +74,7 @@
                 <div class="flex space-x-4">
                     <p>ID: ${user.id}</p>
                     <p>Full Name: ${user.fullName}</p>
-                    <p>Date of Birth: <fmt:formatDate pattern="MM-dd-yyyy" value="${user.dob}" /></p>
+                    <p>Date of Birth: <fmt:formatDate pattern="MM-dd-yyyy" value="${user.dob}"/></p>
                     <p>Gender: ${functions:convertGender(user.sex)}</p>
                     <p>Phone: ${user.phone}</p>
                     <p>Nationality: ${user.nationality}</p>
@@ -80,26 +82,32 @@
             </c:forEach>
             <form action="checkin" method="post">
                 <input type="hidden" name="id" value="${booking.id}">
-                <label for="datein">Date In:</label>
-                <input type="date" id="datein" name="datein" required value="${booking.dateIn}"><br>
-                <label for="dateout">Date Out:</label>
-                <input type="date" id="dateout" name="dateout" required value="${booking.dateOut}"><br>
-                <label for="deposit">Deposit:</label>
-                <select id="deposit" name="deposit">
-                    <option value="0">None</option>
-                    <option value="5000000" <c:if test="${booking.deposite == '5000000'}">selected</c:if>>5 million</option>
-                    <option value="10000000"  <c:if test="${booking.deposite == '10000000'}">selected</c:if>>10 million</option>
-                    <option value="15000000"  <c:if test="${booking.deposite == '15000000'}">selected</c:if>>15 million</option>
-                    </select><br>
+                <div class="flex flex-col">
+                    <label for="datein" class="mb-1">Date In:</label>
+                    <input type="date" id="datein" name="datein" required value="${booking.dateIn}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                </div>
+                <div class="flex flex-col">
+                    <label for="dateout" class="mb-1">Date Out:</label>
+                    <input type="date" id="dateout" name="dateout" required value="${booking.dateOut}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                </div>
+                <div class="flex flex-col">
+                    <label for="deposit" class="mb-1">Deposit:</label>
+                    <select id="deposit" name="deposit" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                        <option value="0">None</option>
+                        <option value="5000000" <c:if test="${booking.deposite == '5000000'}">selected</c:if>>5 million</option>
+                        <option value="10000000" <c:if test="${booking.deposite == '10000000'}">selected</c:if>>10 million</option>
+                        <option value="15000000" <c:if test="${booking.deposite == '15000000'}">selected</c:if>>15 million</option>
+                        </select>
+                    </div>
                 <c:choose>
-                    <c:when test="${ not empty booking}">
+                    <c:when test="${not empty booking}">
                         <input type="hidden" name="roomnum" value="${booking.roomNumber}">
                     </c:when>
                     <c:otherwise>
                         <input type="hidden" name="roomnum" value="${sessionScope.roomnum}">
                     </c:otherwise>
                 </c:choose>
-                <input type="submit" value="Submit">
+                <input type="submit" value="Submit" class="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer mt-4">
             </form>
         </div>
     </body>

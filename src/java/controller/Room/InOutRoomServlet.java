@@ -15,10 +15,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import model.Booking;
 import model.Customer;
 import model.History;
+import model.HistoryReceiveMoney;
 import model.NumberUser;
 import model.Room;
 import model.UsingRoom;
@@ -29,6 +32,8 @@ import model.UsingRoom;
  */
 @WebServlet(name = "InOutRoomServlet", urlPatterns = {"/checkio"})
 public class InOutRoomServlet extends HttpServlet {
+
+    public static final Date NOW = Date.valueOf(LocalDateTime.now().toLocalDate());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -94,7 +99,7 @@ public class InOutRoomServlet extends HttpServlet {
             }
             case "booking" -> {
                 String idBooking = request.getParameter("ID");
-                if(session.getAttribute("users") != null){
+                if (session.getAttribute("users") != null) {
                     session.removeAttribute("users");
                 }
                 Booking booking = new Booking().getById(idBooking);
@@ -120,8 +125,21 @@ public class InOutRoomServlet extends HttpServlet {
 
                 //delete UsingRoom through model mapped
                 UsingRoom usingRoom = new UsingRoom().getById(roomNum);
+                List<HistoryReceiveMoney> list = new HistoryReceiveMoney().getByRoom(usingRoom.getRoomNum(), usingRoom.getDatein(), usingRoom.getDateout());
+                float totalNumber = 0;
+                if (list.isEmpty()) {
+                    for (HistoryReceiveMoney historyReceiveMoney : list) {
+                        totalNumber += historyReceiveMoney.getMoney();
+                    }
+                }
+                if (totalNumber <= usingRoom.getPriceTotal()) {
+                    if (usingRoom.getDeposite() > 0) {
+                        HistoryReceiveMoney hisRefund = new HistoryReceiveMoney(0, roomNum, NOW, -usingRoom.getDeposite(), "Refund deposit", "admin");
+                        hisRefund.insert(hisRefund);
+                    }
+                }
                 usingRoom.delete(usingRoom);
-
+//                usingRoom.delete(usingRoom);
                 //insert History
                 History history = new History(0, room.getRoomNum(), numberUser.numberUser(), usingRoom.getDatein(), usingRoom.getDateout(), usingRoom.getPriceTotal());
                 history.create(history);

@@ -6,7 +6,7 @@
 <html>
     <head>
         <title>Add Booking</title>
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <script>
             function validateDates() {
                 var dateIn = document.getElementById("dateIn").value;
@@ -25,50 +25,55 @@
 
                 return true;
             }
-
         </script>
     </head>
-    <body>
-        <%
-   Date currentDate = new Date();
-   SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-   String formattedDate = formatter.format(currentDate);
-        %>
-
-        <header><jsp:include page="../menu.jsp"/></header>
-        <div class="mx-16">
-            <h2>Add Booking</h2>
-            <c:if test="${not empty error}">
-                <h3 class="text-red-500">${error}</h3>
-            </c:if>
-            <form action="addbooking" method="post"  onsubmit="return validateDates()">
-                <label for="customerName">Customer Name:</label>
-                <input type="text" id="customerName" name="customerName" required value="${customerName}"/><br/>
-
-                <label for="roomNumber">Room Number:</label>
-                <input type="text" id="roomNumber" name="roomNumber" required value="${roomNumber}"/><br/>
-
-                <label for="dateIn">Date In:</label>
-                <input type="date" id="dateIn" name="dateIn" required value="${dateIn}"/><br/>
-
-                <label for="dateOut">Date Out:</label>
-                <input type="date" id="dateOut" name="dateOut" required value="${dateOut}"/><br/>
-
-                <input type="hidden" id="currentDateInput" name="currentDateInput" value="<%= formattedDate %>" readonly required>
-
-                <label for="deposit">Deposit:</label>
-                <select id="deposit" name="deposit">
-                    <option value="0">None</option>
-                    <option value="5000000" <c:if test="${deposit == 5000000}">selected</c:if>>5 million</option>
-                    <option value="10000000" <c:if test="${deposit == 10000000}">selected</c:if>>10 million</option>
-                    <option value="15000000" <c:if test="${deposit == 15000000}">selected</c:if>>15 million</option>
-                    </select><br>
-
-                    <label for="contact">Contact:</label>
-                    <input type="text" id="contact" name="contact" required value="${contact}"/><br/>
-
-                <input type="submit" name="submit" value="Add"/>
-            </form>
+    <%
+Date currentDate = new Date();
+SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+String formattedDate = formatter.format(currentDate);
+    %>
+    <body >
+        <jsp:include page="../menu.jsp"/>
+        <div class="bg-gray-100 flex items-center justify-center h-screen">
+            <div class="mx-16 flex-grow">
+                <h2 class="text-2xl font-bold mb-4">Add Booking</h2>
+                <c:if test="${not empty error}">
+                    <h3 class="text-red-500">${error}</h3>
+                </c:if>
+                <form action="addbooking" method="post" onsubmit="return validateDates()" class="space-y-4">
+                    <div class="flex flex-col">
+                        <label for="customerName" class="mb-1">Customer Name:</label>
+                        <input type="text" id="customerName" name="customerName" required value="${customerName}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="roomNumber" class="mb-1">Room Number:</label>
+                        <input type="text" id="roomNumber" name="roomNumber" required value="${roomNumber}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="dateIn" class="mb-1">Date In:</label>
+                        <input type="date" id="dateIn" name="dateIn" required value="${dateIn}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="dateOut" class="mb-1">Date Out:</label>
+                        <input type="date" id="dateOut" name="dateOut" required value="${dateOut}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                    </div>
+                    <input type="hidden" id="currentDateInput" name="currentDateInput" value="<%= formattedDate %>" readonly required>
+                    <div class="flex flex-col">
+                        <label for="deposit" class="mb-1">Deposit:</label>
+                        <select id="deposit" name="deposit" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                            <option value="0">None</option>
+                            <option value="5000000" <c:if test="${deposit == 5000000}">selected</c:if>>5 million</option>
+                            <option value="10000000" <c:if test="${deposit == 10000000}">selected</c:if>>10 million</option>
+                            <option value="15000000" <c:if test="${deposit == 15000000}">selected</c:if>>15 million</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col">
+                            <label for="contact" class="mb-1">Contact:</label>
+                            <input type="text" id="contact" name="contact" required value="${contact}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                    </div>
+                    <input type="submit" name="submit" value="Add" class="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 cursor-pointer">
+                </form>
+            </div>
         </div>
     </body>
 </html>

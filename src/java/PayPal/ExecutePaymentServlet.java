@@ -2,8 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.Room;
+package PayPal;
 
+import com.paypal.api.payments.PayerInfo;
+import com.paypal.api.payments.Payment;
+import com.paypal.api.payments.Transaction;
+import com.paypal.base.rest.PayPalRESTException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,18 +15,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
-import java.util.List;
-import model.HistoryReceiveMoney;
-import model.NumberUser;
-import model.Room;
 
 /**
  *
  * @author Dai Nhan
  */
-@WebServlet(name = "InformationRoomServlet", urlPatterns = {"/inforroom"})
-public class InformationRoom extends HttpServlet {
+@WebServlet(name = "ExecutePaymentServlet", urlPatterns = {"/executepayment"})
+public class ExecutePaymentServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -41,10 +42,10 @@ public class InformationRoom extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet InformationRoom</title>");
+            out.println("<title>Servlet ExecutePaymentServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet InformationRoom at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ExecutePaymentServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,39 +63,7 @@ public class InformationRoom extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("roomnum");
-        if (id != null) {
-            Room room = new Room().getById(id);
-            if (room.getUsingRoom() != null) {
-                NumberUser numUser = new NumberUser().getByRoom(room);
-                request.setAttribute("user", numUser);
-                //get number day use
-                Date dateOut = numUser.getUsingRoom().getDateout();
-                Date dateIn = numUser.getUsingRoom().getDatein();
-                long differenceInMilliseconds = dateOut.getTime() - dateIn.getTime();
-                int daysUse = (int) (differenceInMilliseconds / (1000 * 60 * 60 * 24));
-
-                if (daysUse > 27) {
-                    request.setAttribute("status", "month");
-                } else {
-                    request.setAttribute("status", "day");
-                }
-                //get history pay rent
-                List<HistoryReceiveMoney> list = new HistoryReceiveMoney().getByRoom(id, dateIn, dateOut);
-                float totalNumber = 0;
-                for (HistoryReceiveMoney historyReceiveMoney : list) {
-                    totalNumber += historyReceiveMoney.getMoney();
-                }
-                if (!list.isEmpty()) {
-                    request.setAttribute("totalNumber", totalNumber);
-                    request.setAttribute("list", list);
-                }
-            }
-            request.setAttribute("room", room);
-            request.getRequestDispatcher("PageRoom/inforroom.jsp").forward(request, response);
-        } else {
-            response.sendRedirect("listroom");
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -108,9 +77,27 @@ public class InformationRoom extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
-    }
+        String paymentId = request.getParameter("paymentId");
+        String payerId = request.getParameter("PayerID");
 
+        try {
+            PaymentService paymentServices = new PaymentService();
+            Payment payment = paymentServices.executePayment(paymentId, payerId);
+
+            PayerInfo payerInfo = payment.getPayer().getPayerInfo();
+            Transaction transaction = payment.getTransactions().get(0);
+
+            request.setAttribute("payer", payerInfo);
+            request.setAttribute("transaction", transaction);
+
+            request.getRequestDispatcher("PayPal/receipt.jsp").forward(request, response);
+
+        } catch (PayPalRESTException ex) {
+            request.setAttribute("errorMessage", ex.getMessage());
+            ex.printStackTrace();
+            request.getRequestDispatcher("PayPal/errorpaypal.jsp").forward(request, response);
+        }
+    }
     /**
      * Returns a short description of the servlet.
      *

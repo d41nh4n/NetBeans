@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.HistoryReceiveMoney;
 
-import Utils.Utils;
+package PayPal;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,77 +12,87 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.sql.Date;
-import java.time.LocalDateTime;
-import model.Account;
-import model.History;
-import model.HistoryReceiveMoney;
-import model.UsingRoom;
-
+import java.io.IOException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.*;
+ 
+import com.paypal.api.payments.*;
+import com.paypal.base.rest.PayPalRESTException;
 /**
  *
  * @author Dai Nhan
  */
-@WebServlet(name = "InsertHRServlet", urlPatterns = {"/insertrm"})
-public class InsertrmServlet extends HttpServlet {
 
-    public static final Date NOW = Date.valueOf(LocalDateTime.now().toLocalDate());
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
+@WebServlet(name="ReviewPaymentServlet", urlPatterns={"/review"})
+public class ReviewPaymentServlet extends HttpServlet {
+   
+    /** 
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet InsertHRServlet</title>");
+            out.println("<title>Servlet ReviewPaymentServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet InsertHRServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ReviewPaymentServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
-    }
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
+    /** 
      * Handles the HTTP <code>GET</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String decription = request.getParameter("description");
-        String total = request.getParameter("total");
-        String[] decrip = decription.split("_");
-        String numRoom = decrip[1];
-        String status = decrip[0];
-        String numberPart = total.replaceAll("[^0-9.]", ""); // Loại bỏ tất cả các ký tự không phải số
-        float number = Utils.parseFloatParameter(numberPart);
+        String paymentId = request.getParameter("paymentId");
+        String payerId = request.getParameter("PayerID");
+         
+        try {
+            PaymentService paymentServices = new PaymentService();
+            Payment payment = paymentServices.getPaymentDetails(paymentId);
+            System.out.println(payment);
 
-        HistoryReceiveMoney his = new HistoryReceiveMoney(0, numRoom, NOW, number, status, "admin");
-        his.insert(his);
-        response.sendRedirect("inforroom?roomnum=" + numRoom);
+            PayerInfo payerInfo = payment.getPayer().getPayerInfo();
+            System.out.println(payerInfo);
+            Transaction transaction = payment.getTransactions().get(0);
+            ShippingAddress shippingAddress = transaction.getItemList().getShippingAddress();
+//
+            request.setAttribute("payer", payerInfo);
+            request.setAttribute("transaction", transaction);
+            request.setAttribute("shippingAddress", shippingAddress);
+
+            String url = "PayPal/review.jsp?paymentId=" + paymentId + "&PayerID=" + payerId;
+
+            request.getRequestDispatcher(url).forward(request, response);
+
+        } catch (PayPalRESTException ex) {
+            request.setAttribute("errorMessage", ex.getMessage());
+            ex.printStackTrace();
+            request.getRequestDispatcher("PayPal/error.jsp").forward(request, response);
+        } 
     }
 
-    /**
+
+    /** 
      * Handles the HTTP <code>POST</code> method.
-     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -90,24 +100,12 @@ public class InsertrmServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String roomNum = request.getParameter("roomnum");
-        float totalPayed = Utils.parseFloatParameter(request.getParameter("totalPayed"));// money was payed
-        float money = Utils.parseFloatParameter(request.getParameter("money"));
-        String user = request.getParameter("manager");
-        if (totalPayed >= new UsingRoom().getById(roomNum).getPriceTotal()) {
-            response.sendRedirect("inforroom?roomnum=" + roomNum);
-        } else {
-            request.setAttribute("roomNum", roomNum);
-            request.setAttribute("money", money / 25000);
-            request.getRequestDispatcher("PayPal/chekout.jsp").forward(request, response);
-        }
-
+    throws ServletException, IOException {
+        processRequest(request, response);
     }
 
-    /**
+    /** 
      * Returns a short description of the servlet.
-     *
      * @return a String containing servlet description
      */
     @Override

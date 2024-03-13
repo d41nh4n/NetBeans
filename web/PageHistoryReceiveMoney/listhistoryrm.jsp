@@ -72,7 +72,7 @@
                                             <fmt:formatDate pattern="MM-dd-yyyy" value="${history.datePay}" />
                                         </td>
                                         <td class="px-10 py-4">
-                                            ${history.money}
+                                            <fmt:formatNumber value="${history.money}" type="number" pattern="#,##0" /> 
                                         </td>
                                         <td class="px-10 py-4">
                                             ${history.status}

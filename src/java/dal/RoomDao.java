@@ -56,7 +56,7 @@ public class RoomDao extends DBContext implements DAOInterface {
         }
         return null;
     }
-
+    
     @Override
     public int insert(Object o) {
         // TODO: Implement this method

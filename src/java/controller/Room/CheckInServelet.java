@@ -5,6 +5,7 @@
 package controller.Room;
 
 import API.ApiCountry;
+import Utils.Service;
 import Utils.Utils;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -105,9 +106,9 @@ public class CheckInServelet extends HttpServlet {
         Date datein = Utils.convertStringToDate(request.getParameter("datein"));
         Date dateout = Utils.convertStringToDate(request.getParameter("dateout"));
         float deposite = Utils.parseFloatParameter(request.getParameter("deposit"));
-        float priceTotal = Utils.parseFloatParameter(request.getParameter("priceTotal"));
+        float priceTotal = Service.countTotalPrice(datein, dateout, id);
         // create object mapped to room is used (set 0 to ensure data accuracy)
-        UsingRoom usingRoom = new UsingRoom(id, 0, datein, dateout, deposite, deposite);
+        UsingRoom usingRoom = new UsingRoom(id, 0, datein, dateout, deposite, priceTotal);
 
         //check date-in, date-out
         if (Utils.checkDateInUsingRoom(usingRoom)) {

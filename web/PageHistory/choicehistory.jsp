@@ -54,12 +54,24 @@
                 document.getElementById('addModal').classList.remove('hidden');
             }
         </script>
+        <style>
+            .center {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+        </style>
     </head>
     <body>
         <header><jsp:include page="../menu.jsp"/></header>
-        <div class="mx-16">
-            <a href="listhistory">History usingyoom</a>
-            <a href="listhistoryrm">History cash flow</a>
+        <div class="mx-16 center">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <a href="listhistory">History usingyoom</a>
+            </button>
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-4">
+                <a href="listhistoryrm">History cash flow</a>
+            </button>
         </div>
     </body>
 </html>
