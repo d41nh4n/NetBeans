@@ -47,7 +47,11 @@ String formattedDate = formatter.format(currentDate);
                     </div>
                     <div class="flex flex-col">
                         <label for="roomNumber" class="mb-1">Room Number:</label>
-                        <input type="text" id="roomNumber" name="roomNumber" required value="${roomNumber}" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                        <select id="roomNumber" name="roomNumber" class="px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
+                            <c:forEach items="${room}" var="room">
+                                <option value="${room.roomNum}">${room.roomNum}</option>
+                            </c:forEach>
+                        </select>
                     </div>
                     <div class="flex flex-col">
                         <label for="dateIn" class="mb-1">Date In:</label>

@@ -139,7 +139,6 @@ public class InOutRoomServlet extends HttpServlet {
                     }
                 }
                 usingRoom.delete(usingRoom);
-//                usingRoom.delete(usingRoom);
                 //insert History
                 History history = new History(0, room.getRoomNum(), numberUser.numberUser(), usingRoom.getDatein(), usingRoom.getDateout(), usingRoom.getPriceTotal());
                 history.create(history);

@@ -13,8 +13,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Date;
+import java.util.List;
 import model.Booking;
 import model.HistoryReceiveMoney;
+import model.Room;
 
 /**
  *
@@ -61,6 +63,8 @@ public class AddBookingServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        List<Room>room = new Room().getAll();
+        request.setAttribute("room", room);
         request.getRequestDispatcher("PageBooking/addbooking.jsp").forward(request, response);
     }
 

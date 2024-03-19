@@ -77,6 +77,15 @@ public class UpdateCustomerServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -86,10 +95,49 @@ public class UpdateCustomerServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String id = request.getParameter("id");
         String nationality = request.getParameter("nationality");
+        if (!isValidName(fullName)) {
+            // Tên không hợp lệ
+            request.setAttribute("notice", "Invalid name! Please enter a valid name. The name cannot contain special characters or numbers");
+            request.setAttribute("fullname", fullName); // Truyền lại giá trị đã nhập cho trường fullname
+            Customer customer = new Customer(fullName, Date.valueOf(dob), sex, phone, id, nationality);
+            request.setAttribute("customer", customer);
+            request.setAttribute("countries", ApiCountry.countries);
+            request.getRequestDispatcher("PageCustomer/updatecustomer.jsp").forward(request, response);
+            return;
+        }
+
+        if (!sex) {
+            request.setAttribute("notice", "Sex is required! Please select a gender.");
+            request.setAttribute("fullname", fullName);
+            Customer customer = new Customer(fullName, Date.valueOf(dob), sex, phone, id, nationality);
+            request.setAttribute("customer", customer);
+            request.setAttribute("countries", ApiCountry.countries);
+            request.getRequestDispatcher("PageCustomer/updatecustomer.jsp").forward(request, response);
+            return;
+        }
+
+        if (!isValidId(id)) {
+            request.setAttribute("notice", "Invalid Id! Please enter a valid id. Id numbers cannot contain alphanumeric characters");
+            request.setAttribute("fullname", fullName);
+            Customer customer = new Customer(fullName, Date.valueOf(dob), sex, phone, id, nationality);
+            request.setAttribute("customer", customer);
+            request.setAttribute("countries", ApiCountry.countries);
+            request.getRequestDispatcher("PageCustomer/updatecustomer.jsp").forward(request, response);
+            return;
+        }
+        if (!isValidPhone(phone)) {
+            request.setAttribute("notice", "Invalid phone number! Please enter a valid phone number. Phone numbers cannot contain alphanumeric characters");
+            request.setAttribute("fullname", fullName);
+            Customer customer = new Customer(fullName, Date.valueOf(dob), sex, phone, id, nationality);
+            request.setAttribute("customer", customer);
+            request.setAttribute("countries", ApiCountry.countries);
+            request.getRequestDispatcher("PageCustomer/updatecustomer.jsp").forward(request, response);
+            return;
+        }
 
         Customer customer = new Customer(fullName, Date.valueOf(dob), sex, phone, id, nationality);
         customer.update(customer);
-        request.setAttribute("notice", "Add Customer success!");
+        request.setAttribute("notice", "Update Customer success!");
         response.sendRedirect("listcustomer");
     }
 
@@ -103,4 +151,15 @@ public class UpdateCustomerServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private boolean isValidPhone(String phone) {
+        return phone != null && !phone.trim().isEmpty() && phone.matches("\\d+");
+    }
+
+    private boolean isValidId(String id) {
+        return id != null && !id.trim().isEmpty() && id.matches("\\d+");
+    }
+
+    private boolean isValidName(String fullName) {
+        return fullName != null && !fullName.trim().isEmpty() && fullName.matches("[\\p{L} ]+");
+    }
 }

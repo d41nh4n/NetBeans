@@ -67,15 +67,18 @@ public class InsertrmServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
+
         String decription = request.getParameter("description");
         String total = request.getParameter("total");
         String[] decrip = decription.split("_");
         String numRoom = decrip[1];
         String status = decrip[0];
         String numberPart = total.replaceAll("[^0-9.]", ""); // Loại bỏ tất cả các ký tự không phải số
-        float number = Utils.parseFloatParameter(numberPart);
-
-        HistoryReceiveMoney his = new HistoryReceiveMoney(0, numRoom, NOW, number, status, "admin");
+        float number = Utils.parseFloatParameter(numberPart) * 25000;
+        HttpSession session = request.getSession();
+        Account ac = (Account) session.getAttribute("manager");
+        HistoryReceiveMoney his = new HistoryReceiveMoney(0, numRoom, NOW, number, status, ac.getUserName());
         his.insert(his);
         response.sendRedirect("inforroom?roomnum=" + numRoom);
     }
@@ -102,7 +105,6 @@ public class InsertrmServlet extends HttpServlet {
             request.setAttribute("money", money / 25000);
             request.getRequestDispatcher("PayPal/chekout.jsp").forward(request, response);
         }
-
     }
 
     /**

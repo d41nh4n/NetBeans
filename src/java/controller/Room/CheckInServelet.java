@@ -21,6 +21,7 @@ import java.util.List;
 import model.Booking;
 import model.Customer;
 import model.NumberUser;
+import model.Room;
 import model.UsingRoom;
 
 /**
@@ -70,6 +71,7 @@ public class CheckInServelet extends HttpServlet {
             throws ServletException, IOException {
         String id = request.getParameter("selectedCustomer");
         List<Customer> users;
+        List<Room> room = new Room().getAll();
         HttpSession session = request.getSession();
         if (session.getAttribute("users") == null) {
             users = new ArrayList<>();
@@ -82,7 +84,7 @@ public class CheckInServelet extends HttpServlet {
             users.add(selectedCustomer);
         }
         session.setAttribute("users", users);
-
+        request.setAttribute("room", room);
         request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
     }
 

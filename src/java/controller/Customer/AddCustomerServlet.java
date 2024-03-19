@@ -90,20 +90,27 @@ public class AddCustomerServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String id = request.getParameter("id");
         String nationality = request.getParameter("nationality");
-//        Part part = request.getPart("photo");
-//
-//        String realPath = request.getServletContext().getRealPath("/img");
-//        String filename = Path.of(part.getSubmittedFileName()).getFileName().toString();
-//
-//        if (!Files.exists(Path.of(realPath))) {
-//            Files.createDirectories(Path.of(realPath));
-//        }
-//
-//        part.write(realPath + "/" + filename);
+        if (!isValidName(fullName)) {
+            request.setAttribute("notice", "Invalid name! Please enter a valid name. The name cannot contain special characters or numbers");
+            request.getRequestDispatcher("PageCustomer/addcustomer.jsp").forward(request, response);
+            return;
+        }
+
+        if (!isValidId(id)) {
+            request.setAttribute("notice", "Invalid Id! Please enter a valid id. Id numbers cannot contain alphanumeric characters");
+            request.getRequestDispatcher("PageCustomer/addcustomer.jsp").forward(request, response);
+            return;
+        }
+
+        if (!isValidPhone(phone)) {
+            request.setAttribute("notice", "Invalid phone number! Please enter a valid phone number. Phone numbers cannot contain alphanumeric characters");
+            request.getRequestDispatcher("PageCustomer/addcustomer.jsp").forward(request, response);
+            return;
+        }
         Customer customer = new Customer();
         int rs = customer.insert(new Customer(fullName, (Date) Date.valueOf(dob), sex, phone, id, nationality));
         if (rs < 1) {
-            request.setAttribute("notice", "Customer exsisted ,Add Customer failed!");
+            request.setAttribute("notice", "Customer existed, Add Customer failed!");
         } else {
             request.setAttribute("notice", "Add Customer success!");
         }
@@ -120,4 +127,15 @@ public class AddCustomerServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private boolean isValidPhone(String phone) {
+        return phone != null && !phone.trim().isEmpty() && phone.matches("\\d+");
+    }
+
+    private boolean isValidId(String id) {
+        return id != null && !id.trim().isEmpty() && id.matches("\\d+");
+    }
+
+    private boolean isValidName(String fullName) {
+        return fullName != null && !fullName.trim().isEmpty() && fullName.matches("[\\p{L} ]+");
+    }
 }

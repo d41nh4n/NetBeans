@@ -24,6 +24,7 @@
             <h1 class="text-2xl font-bold mb-4 flex justify-center">Update Customer</h1>
             <div class="max-w-lg mx-auto bg-white p-6 rounded shadow">
                 <form action="updatecustomer" method="post">
+                       <span style="color:red">${notice}</span>
                     <div class="mb-4">
                         <label for="fullname" class="block text-gray-700">Full Name:</label>
                         <input type="text" id="fullname" name="fullname" value="${customer.fullName}" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">

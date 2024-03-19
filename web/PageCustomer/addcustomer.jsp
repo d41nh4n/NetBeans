@@ -14,6 +14,7 @@
             <h1 class="text-3xl font-bold mb-4">Customer Input Form</h1>
             <div class="w-full max-w-lg bg-white rounded-lg shadow-md p-8 flex flex-grow">
                 <form action="addcustomer" method="post">
+                    <span style="color:red">${notice}</span>
                     <div class="mb-4">
                         <label for="firstname" class="block mb-2">First Name:</label>
                         <input type="text" id="firstname" name="firstname" required class="w-full px-4 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-400">
@@ -28,8 +29,8 @@
                     </div>
                     <div class="mb-4">
                         <label for="sex" class="block mb-2">Sex:</label>
-                        <input type="radio" id="male" name="sex" value="true" class="mr-2"><label for="male">Male</label>
-                        <input type="radio" id="female" name="sex" value="false" class="ml-4 mr-2"><label for="female">Female</label>
+                        <input type="radio" id="male" name="sex" value="true" class="mr-2" required><label for="male">Male</label>
+                        <input type="radio" id="female" name="sex" value="false" class="ml-4 mr-2" required><label for="female">Female</label>
                     </div>
                     <div class="mb-4">
                         <label for="phone" class="block mb-2">Phone:</label>
