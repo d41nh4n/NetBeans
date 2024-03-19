@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import model.Account;
 import model.History;
 import model.HistoryReceiveMoney;
+import model.Room;
 import model.UsingRoom;
 
 /**
@@ -94,17 +95,40 @@ public class InsertrmServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
         String roomNum = request.getParameter("roomnum");
-        float totalPayed = Utils.parseFloatParameter(request.getParameter("totalPayed"));// money was payed
-        float money = Utils.parseFloatParameter(request.getParameter("money"));
+        float totalPayed = Utils.parseFloatParameter(request.getParameter("totalPayed"));
         String user = request.getParameter("manager");
-        if (totalPayed >= new UsingRoom().getById(roomNum).getPriceTotal()) {
-            response.sendRedirect("inforroom?roomnum=" + roomNum);
+        String status = request.getParameter("status");
+        float money = 0f;
+        if (action == "Month") {
+            money += new Room().getById(roomNum).getPricePerMonth();
         } else {
-            request.setAttribute("roomNum", roomNum);
-            request.setAttribute("money", money / 25000);
-            request.getRequestDispatcher("PayPal/chekout.jsp").forward(request, response);
+            money += totalPayed;
         }
+        switch (action) {
+            case "paypal":
+                if (totalPayed >= new UsingRoom().getById(roomNum).getPriceTotal()) {
+                    response.sendRedirect("inforroom?roomnum=" + roomNum);
+                } else {
+                    request.setAttribute("roomNum", roomNum);
+                    request.setAttribute("money", money / 25000);
+                    request.getRequestDispatcher("PayPal/chekout.jsp").forward(request, response);
+                }
+                break;
+            case "cash":
+                if (totalPayed >= new UsingRoom().getById(roomNum).getPriceTotal()) {
+                    response.sendRedirect("inforroom?roomnum=" + roomNum);
+                } else {
+                    HistoryReceiveMoney his = new HistoryReceiveMoney(0, roomNum, NOW, money, status + " room fee", user);
+                    his.insert(his);
+                    response.sendRedirect("inforroom?roomnum=" + roomNum);
+                }
+                break;
+            default:
+                throw new AssertionError();
+        }
+
     }
 
     /**

@@ -75,9 +75,9 @@ public class InformationRoom extends HttpServlet {
                 int daysUse = (int) (differenceInMilliseconds / (1000 * 60 * 60 * 24));
 
                 if (daysUse > 27) {
-                    request.setAttribute("status", "month");
+                    request.setAttribute("status", "Month");
                 } else {
-                    request.setAttribute("status", "day");
+                    request.setAttribute("status", "Day");
                 }
                 //get history pay rent
                 List<HistoryReceiveMoney> list = new HistoryReceiveMoney().getByRoom(id, dateIn, dateOut);

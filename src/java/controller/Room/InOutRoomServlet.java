@@ -32,7 +32,7 @@ import model.UsingRoom;
  */
 @WebServlet(name = "InOutRoomServlet", urlPatterns = {"/checkio"})
 public class InOutRoomServlet extends HttpServlet {
-
+    
     public static final Date NOW = Date.valueOf(LocalDateTime.now().toLocalDate());
 
     /**
@@ -109,6 +109,8 @@ public class InOutRoomServlet extends HttpServlet {
                     }
                     session.setAttribute("booking", booking);
                     request.getRequestDispatcher("PageRoom/addroom.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect("listbooking");
                 }
             }
             case "edit" -> {
@@ -116,7 +118,7 @@ public class InOutRoomServlet extends HttpServlet {
                 request.setAttribute("room", room);
                 request.getRequestDispatcher("PageRoom/updateroom.jsp").forward(request, response);
             }
-
+            
             case "checkout" -> {
                 //delete NumberUser 
                 Room room = new Room().getById(roomNum);
@@ -142,7 +144,7 @@ public class InOutRoomServlet extends HttpServlet {
                 //insert History
                 History history = new History(0, room.getRoomNum(), numberUser.numberUser(), usingRoom.getDatein(), usingRoom.getDateout(), usingRoom.getPriceTotal());
                 history.create(history);
-
+                
                 response.sendRedirect("listroom");
             }
             default ->
@@ -171,21 +173,21 @@ public class InOutRoomServlet extends HttpServlet {
             case "checkin" -> {
                 // get information of User
                 int numberUser = Integer.parseInt(request.getParameter("numberuser"));
-
+                
                 ArrayList<Customer> customers = new ArrayList<>();
-
+                
                 for (int i = 1; i <= numberUser; i++) {
-
+                    
                     String idCus = request.getParameter("id" + i);
-
+                    
                     if (new Customer().getById(id) == null) {
-
+                        
                         String fullName = request.getParameter("firstName" + i) + " " + request.getParameter("lastName" + i);
                         String dob = request.getParameter("dob" + i);
                         boolean sex = Utils.parseBooleanParameter(request.getParameter("sex" + i));
                         String phone = request.getParameter("phone" + i);
                         String nationality = request.getParameter("nationality" + i);
-
+                        
                         Customer customer = new Customer(fullName, Date.valueOf(dob), sex, phone, idCus, nationality);
                         //add database
                         customer.insert(customer);
@@ -208,10 +210,10 @@ public class InOutRoomServlet extends HttpServlet {
                 // create relation between UsingRoom and Customer
                 NumberUser users = new NumberUser(customers, usingRoom);
                 users.insert(users);
-
+                
                 response.sendRedirect("listroom");
             }
-
+            
             case "edit" -> {
                 //get information usingroom was changed
                 Date dateout = Utils.convertStringToDate(request.getParameter("dateout"));
@@ -225,7 +227,7 @@ public class InOutRoomServlet extends HttpServlet {
                 usingRoom.setPriceTotal(priceTotal);
                 // update database throught object mapped
                 usingRoom.update(usingRoom);
-
+                
                 response.sendRedirect("listroom");
             }
             default -> {
